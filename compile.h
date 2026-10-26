@@ -9,12 +9,21 @@
 #include <utility>
 #include <string>
 
-class compiler {
-    std::map<int, std::vector<std::pair<double, double>>> sleepMap;
+class mapCompiler {
 
+    std::map<int, std::vector<std::pair<double, double>>> timeToSleepMap;
+    //first is going to be stressScore, second will be workHours.
+    std::map<int, std::vector<std::pair<double,double>>> sleepDurationMap;
 public:
-    compiler();
+    mapCompiler();
     void compile();
     void iterate(int key) const;
+    std::pair<double,double> averageDurationRange(int start, int end);
+    std::pair<double,double> averageLatencyRange(int start, int end);
+};
+class heapCompiler {
+public:
+    heapCompiler();
+    void compile();
 };
 #endif //ESTIMATEDSLEEPTIME_COMPILE_H

@@ -4,10 +4,11 @@
 #include <sstream>
 #include <cmath>
 
-void compiler::compile() {
+//This'll be used to compile both the hashmap and the heap or we can actually do a separate program for each
+void mapCompiler::compile() {
     std::ifstream file("sleep_health_dataset.csv");
     if (!file) {
-        std::cerr << "Could not open sleep_data.csv\n";
+        std::cerr << "Could not open sleep_health_dataset.csv\n";
         return;
     }
 
@@ -25,18 +26,23 @@ void compiler::compile() {
             continue;
         }
         double sleepHrs   = std::stod(row[6]);
+        double stressScore = std::stod(row[18]);
+        double workHours = std::stod(row[19]);
+
+        double timeToSleep = std::stoi(row[10]);
         double caffeineMg = std::stod(row[12]);
         double screenMins = std::stod(row[14]);
 
-        int key = static_cast<int>(std::lround(sleepHrs*60));
+        int durationKey = static_cast<int>(std::lround(sleepHrs*60));
         //std::cout << key<<std::endl;
-        sleepMap[key].push_back({caffeineMg, screenMins});
+        sleepDurationMap[durationKey].push_back({stressScore, workHours});
+        timeToSleepMap[timeToSleep].push_back({caffeineMg,screenMins});
     }
 }
 
-void compiler::iterate(int key) const {
-    auto it = sleepMap.find(key);
-    if (it == sleepMap.end()) {
+void mapCompiler::iterate(int key) const {
+    auto it = sleepDurationMap.find(key);
+    if (it == sleepDurationMap.end()) {
         std::cout << "No entries for key " << key << "\n";
         return;
     }
@@ -44,6 +50,59 @@ void compiler::iterate(int key) const {
         std::cout << caffeine << " mg, " << screen << " mins\n";
     }
 }
-compiler::compiler() {
+std::pair<double,double> mapCompiler::averageDurationRange(int start, int end) {
+    std::pair<double,double> final = {-1,-1};
+    int count = 0;
+    double stressScore = 0;
+    double workHours = 0;
+    //loop through all pairs
+    for (int i = start; i<end;i++) {
+        auto it = sleepDurationMap.find(i);
+        if (it != sleepDurationMap.end()) {
+            //Loop through any elements in the vector
+            //std::cout <<it->second.size()<<std::endl;
+            for (int j = 0;j<it->second.size();j++) {
+                count++;
+                stressScore += it->second[j].first;
+                workHours += it->second[j].second;
+            }
+        }
+    }
+    if (count != 0) {
+        stressScore /= count;
+        workHours /= count;
+    }
+    final = {stressScore,workHours};
+
+    return final;
+}
+std::pair<double,double> mapCompiler::averageLatencyRange(int start, int end) {
+    std::pair<double,double> final = {-1,-1};
+    int count = 0;
+    double caffeineMg = 0;
+    double screenTime = 0;
+    //loop through all pairs
+    for (int i = start; i<end;i++) {
+        auto it = timeToSleepMap.find(i);
+        if (it != timeToSleepMap.end()) {
+            //Loop through any elements in the vector
+            //std::cout <<it->second.size()<<std::endl;
+            for (int j = 0;j<it->second.size();j++) {
+                count++;
+                caffeineMg += it->second[j].first;
+                screenTime += it->second[j].second;
+            }
+        }
+    }
+    if (count != 0) {
+        caffeineMg /= count;
+        screenTime /= count;
+    }
+    final = {caffeineMg,screenTime};
+
+    return final;
+}
+
+mapCompiler::mapCompiler() {
 
 }
