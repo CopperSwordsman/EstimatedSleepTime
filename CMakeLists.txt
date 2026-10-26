@@ -4,4 +4,5 @@ project(EstimatedSleepTime)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(EstimatedSleepTime main.cpp
-        handling.cpp)
+        handling.cpp
+        compile.cpp)
