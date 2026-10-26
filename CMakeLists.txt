@@ -6,3 +6,4 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(EstimatedSleepTime main.cpp
         handling.cpp
         compile.cpp)
+configure_file(${CMAKE_SOURCE_DIR}/sleep_health_dataset.csv ${CMAKE_BINARY_DIR}/sleep_health_dataset.csv COPYONLY)
