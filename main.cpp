@@ -1,5 +1,7 @@
 #include <iostream>
 #include "compile.h"
+#include "Load_window.h"
+
 int main() {
     mapCompiler c;
     c.compile();
@@ -12,5 +14,11 @@ int main() {
     std::pair<double,double> testLatencyPair;
     testLatencyPair = c.averageLatencyRange(0,10);
     std::cout<<"\nAverage Caffeine MG: " << testLatencyPair.first << "\n" << "Average Screentime Before Bed: " << testLatencyPair.second << std::endl;
+
+    //SFML Window
+    Game game;
+    game.run();
+
+
     return 0;
 }
