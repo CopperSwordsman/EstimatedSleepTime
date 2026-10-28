@@ -62,9 +62,9 @@ void mapCompiler::compile() {
         double caffeineMg = std::stod(row[12]);
         double screenMins = std::stod(row[14]);
         int sleepMinutes = static_cast<int>(std::lround(sleepHrs*60));
-        double sleepQuality = calculateSleepQuality(sleepMinutes,timeToSleep);
+        int sleepQuality = static_cast<int>(calculateSleepQuality(sleepMinutes,timeToSleep));
         int durationKey = static_cast<int>(std::lround(sleepHrs*60));
-        //std::cout << key<<std::endl;
+        //std::cout << key<<std::endl
         sleepDurationMap[durationKey].push_back({stressScore, workHours});
         timeToSleepMap[timeToSleep].push_back({caffeineMg,screenMins});
         sleepQualityMap[sleepQuality].push_back({sleepMinutes,timeToSleep, stressScore,workHours, caffeineMg, screenMins});
@@ -72,13 +72,13 @@ void mapCompiler::compile() {
 }
 
 void mapCompiler::iterate(int key) const {
-    auto it = sleepDurationMap.find(key);
-    if (it == sleepDurationMap.end()) {
+    auto it = sleepQualityMap.find(key);
+    if (it == sleepQualityMap.end()) {
         std::cout << "No entries for key " << key << "\n";
         return;
     }
-    for (const auto& [caffeine, screen] : it->second) {
-        std::cout << caffeine << " mg, " << screen << " mins\n";
+    for (const auto& [sleepMinutes, timeToSleep,stressScore,workHours,caffeineMg,screenMins] : it->second) {
+        std::cout << caffeineMg << " mg, " << screenMins << " mins\n";
     }
 }
 std::pair<double,double> mapCompiler::averageDurationRange(int start, int end) {

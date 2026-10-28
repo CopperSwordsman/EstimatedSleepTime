@@ -15,6 +15,7 @@ class mapCompiler {
     std::map<int, std::vector<std::pair<double,double>>> sleepDurationMap;
     //this is our general quality map
     //sleepMinutes,sleepLatency, stressScore, workHours, caffeineMg, screenTime
+    //now that sleepQuality is a thing that can be used in turn to grab things
     std::map<int, std::vector<std::tuple<int,int, double, double,double,double>>> sleepQualityMap;
 public:
     mapCompiler();

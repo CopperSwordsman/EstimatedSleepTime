@@ -17,6 +17,7 @@ int main() {
     std::tuple<int, double,double> testSleepDurationTuple;
     testSleepDurationTuple = c.averageDurationCount(1000,true);
     std::cout << "\nAverage Sleep minutes: " << std::get<0>(testSleepDurationTuple) << "\nAverage Stress Score " << std::get<1>(testSleepDurationTuple) << "\nAverage Work Hours: " << std::get<2>(testSleepDurationTuple) << std::endl;
-
+    std::cout<<"\n\n";
+    c.iterate(7);
     return 0;
 }
