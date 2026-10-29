@@ -4,8 +4,8 @@
 #include <sstream>
 #include <ranges>
 #include <cmath>
-RBNode::RBNode(InfoNode* info_node) {
-    sleepQuality = info_node->sleepQuality;
+RBNode::RBNode(int sleepQuality_) {
+    sleepQuality = sleepQuality_;
     color = Color::Red;
     left = nullptr;
     right = nullptr;
@@ -93,8 +93,8 @@ void RBTree::insertCorrection(RBNode* k) {
     }
     root->color = Color::Black;
 }
-void RBTree::insert(InfoNode* info_node) {
-    RBNode* node = new RBNode(info_node);
+RBNode* RBTree::getNode(int sleepQuality) {
+    RBNode* node = new RBNode(sleepQuality);
     node->left = NIL;
     node->right = NIL;
     RBNode* parent = nullptr;
@@ -109,11 +109,10 @@ void RBTree::insert(InfoNode* info_node) {
         }
         else {
             //this is where we just have an existing node and we have literally no reason to change RB properties cause nothing actually changed
-            //returning here is fine and we've deleted the niode we made cause that was useless
-            current->nodes.push_back(info_node);
+            //returning here is fine and we've deleted the node we made cause that was useless
             node = nullptr;
             delete node;
-            return;
+            return current;
         }
     }
     node->parent = parent;
@@ -129,20 +128,28 @@ void RBTree::insert(InfoNode* info_node) {
     //this is the first case where we just added to the root so we gotta make it black
     if (node->parent == nullptr) {
         node->color = Color::Black;
-        return;
+        return node;
     }
     //different case where we added a red node to under the root node, these don't hurt the tree at all
     if (node->parent->parent == nullptr) {
-        return;
+        return node;
     }
     insertCorrection(node);
+    return node;
 }
 RBTree::RBTree() {
-    RBNode* NIL = new RBNode(nullptr);
+    RBNode* NIL = new RBNode(-1);
     NIL->color = Color::Black;
     NIL->left = nullptr;
     NIL->right = nullptr;
     root = NIL;
+}
+//cases: tree[1] = 5
+//int x = tree[1]
+RBNode& Map::operator[](int sleepQuality_) {
+    //all we want this to do is return a reference to the RBNode if it exists, if it doesn't exist we can safely make a new node
+    RBNode x = *tree.getNode(sleepQuality_);
+    return x;
 }
 //This'll be used to compile both the hashmap and the heap or we can actually do a separate program for each
 double mapCompiler::calculateLatencyScore(int latencyDuration) {

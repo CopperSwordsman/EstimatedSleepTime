@@ -33,7 +33,7 @@ public:
     RBNode* right;
     RBNode* parent;
     std::vector<InfoNode*> nodes;
-    RBNode(InfoNode* info_node);
+    RBNode(int sleepQuality_);
 
 };
 class RBTree {
@@ -45,10 +45,11 @@ class RBTree {
     void insertCorrection(RBNode* k);
 public:
     RBTree();
-    void insert(InfoNode* info_node);
-
+    RBNode* getNode(int sleepQuality);
 };
-class map {
+class Map {
+    RBTree tree;
+    RBNode& operator[](int sleepQuality_);
 };
 class mapCompiler {
 
