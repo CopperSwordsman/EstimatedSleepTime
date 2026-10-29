@@ -12,6 +12,7 @@ enum class Color {
     Black
 };
 struct InfoNode {
+    int sleepQuality;
     int sleepDuration;
     int sleepLatency;
     double stressScore;
@@ -24,25 +25,27 @@ class RBNode {
     //color: a left right, a value and that value will be a vector with tuples?
     //maybe the tuples is too much though and too hard to gather from how about just the individual values in the object
     //so we could do sleep quality as the key and then have values that contribute to sleep quality under that
-    int sleepQuality;
-    std::vector<InfoNode> nodes;
 public:
+    //sleepQuality is the value
+    int sleepQuality;
     Color color;
     RBNode* left;
     RBNode* right;
     RBNode* parent;
-    RBNode(int sleepQuality_, int sleepDuration_, int sleepLatency_, double stressScore_, double workHours_, double caffeineMg_, double screenTime_);
+    std::vector<InfoNode*> nodes;
+    RBNode(InfoNode* info_node);
+
 };
 class RBTree {
     RBNode* root;
     RBNode* NIL;
 
     void leftRotate(RBNode* x);
-    void rightRotate(RBNode* y);
+    void rightRotate(RBNode* x);
     void insertCorrection(RBNode* k);
 public:
     RBTree();
-    void insert(int sleepQuality_, int sleepDuration_, int sleepLatency_, double stressScore_, double workHours_, double caffeineMg_, double screenTime_);
+    void insert(InfoNode* info_node);
 
 };
 class map {
