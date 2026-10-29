@@ -4,7 +4,32 @@
 #include <sstream>
 #include <ranges>
 #include <cmath>
+RBNode::RBNode(int sleepQuality_, int sleepDuration_, int sleepLatency_, double stressScore_, double workHours_, double caffeineMg_, double screenTime_) {
+    sleepQuality = sleepQuality_;
+    color = Color::Red;
+    left = nullptr;
+    right = nullptr;
+    parent = nullptr;
+}
+void RBTree::leftRotate(RBNode* x) {
 
+}
+void RBTree::rightRotate(RBNode* y) {
+
+}
+void RBTree::insertCorrection(RBNode* k) {
+
+}
+RBTree::RBTree() {
+    RBNode* NIL = new RBNode(0,0,0,0,0,0,0);
+    NIL->color = Color::Black;
+    NIL->left = nullptr;
+    NIL->right = nullptr;
+    root = NIL;
+}
+void RBTree::insert(int sleepQuality_, int sleepDuration_, int sleepLatency_, double stressScore_, double workHours_, double caffeineMg_, double screenTime_) {
+    RBNode* node = new RBNode(sleepQuality_,sleepDuration_,sleepLatency_,stressScore_,workHours_,caffeineMg_,screenTime_)
+}
 //This'll be used to compile both the hashmap and the heap or we can actually do a separate program for each
 double mapCompiler::calculateLatencyScore(int latencyDuration) {
     const double L = std::max(0.0, static_cast<double>(latencyDuration));
@@ -78,7 +103,7 @@ void mapCompiler::iterate(int key) const {
         return;
     }
     for (const auto& [sleepMinutes, timeToSleep,stressScore,workHours,caffeineMg,screenMins] : it->second) {
-        std::cout << caffeineMg << " mg, " << screenMins << " mins\n";
+        std::cout << sleepMinutes << " mg, " << screenMins << " mins\n";
     }
 }
 std::pair<double,double> mapCompiler::averageDurationRange(int start, int end) {
