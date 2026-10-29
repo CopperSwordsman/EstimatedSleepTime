@@ -10,4 +10,7 @@ add_executable(EstimatedSleepTime main.cpp
         maps.h
         infonode.cpp
         infonode.h)
+        Heap.cpp
+        Heap.h
+)
 configure_file(${CMAKE_SOURCE_DIR}/sleep_health_dataset.csv ${CMAKE_BINARY_DIR}/sleep_health_dataset.csv COPYONLY)
