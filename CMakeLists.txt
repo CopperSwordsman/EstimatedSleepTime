@@ -9,7 +9,7 @@ add_executable(EstimatedSleepTime main.cpp
         maps.cpp
         maps.h
         infonode.cpp
-        infonode.h)
+        infonode.h
         Heap.cpp
         Heap.h
 )
