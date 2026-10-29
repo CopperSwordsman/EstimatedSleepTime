@@ -1,6 +1,8 @@
 #include <iostream>
 #include "compile.h"
+#include "maps.h"
 int main() {
+    /*
     mapCompiler c;
     c.compile();
     //c.iterate(481);
@@ -18,6 +20,28 @@ int main() {
     testSleepDurationTuple = c.averageDurationCount(1000,true);
     std::cout << "\nAverage Sleep minutes: " << std::get<0>(testSleepDurationTuple) << "\nAverage Stress Score " << std::get<1>(testSleepDurationTuple) << "\nAverage Work Hours: " << std::get<2>(testSleepDurationTuple) << std::endl;
     std::cout<<"\n\n";
-    c.iterate(5);
+    c.iterate(5);*/
+    //easier to type but technically bad practice
+    enum InfoNodeType{
+        sleepQuality,
+        sleepDuration,
+        sleepLatency,
+        stressScore,
+        workHours,
+        caffeineMg,
+        screenTime
+    };
+    CustomMap m;
+    compiler c;
+    c.compile(m);
+    for (int i = 5;i<=100;i++) {
+        std::cout << i << " Sleep Quality\n";
+        std::cout << "Sleep Duration: " << m[i].averageValue(sleepDuration) << std::endl;
+        std::cout << "Sleep Latency: " << m[i].averageValue(sleepLatency) << std::endl;
+        std::cout << "Stress Score: " << m[i].averageValue(stressScore) << std::endl;
+        std::cout << "Work Hours: " << m[i].averageValue(workHours) << std::endl;
+        std::cout << "Caffeine MG: " << m[i].averageValue(caffeineMg) << std::endl;
+        std::cout << "Screen Time: " << m[i].averageValue(screenTime) << "\n"<< std::endl;
+    }
     return 0;
 }
