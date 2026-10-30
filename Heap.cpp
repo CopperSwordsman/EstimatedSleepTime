@@ -32,6 +32,25 @@ void Heap::siftUp(int index) {
     }
 }
 
+void Heap::siftDown(int index) {
+    int child_index = (index * 2) + 1;
+    while (child_index < heapData.size()) {
+        // If right child index exists AND right has more priority than left, use right child index
+        if (child_index + 1 < heapData.size() && compare(heapData[child_index + 1], heapData[child_index])) {
+            child_index++;
+        }
+
+        // If child has more priority than parent, swap and update index
+        if (compare(heapData[child_index], heapData[index])) {
+            std::swap(heapData[child_index], heapData[index]);
+            index = child_index;
+        } else {
+            break;
+        }
+        child_index = (index * 2) + 1;
+    }
+}
+
 bool Heap::isEmpty() const {return heapData.empty();}
 
 const InfoNode* Heap::top() const {
