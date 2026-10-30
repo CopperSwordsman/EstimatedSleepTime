@@ -13,6 +13,11 @@ Heap::~Heap() {
     }
 }
 
+void Heap::push(InfoNode* node_ptr) {
+    heapData.push_back(node_ptr);
+    siftUp(heapData.size() - 1);
+}
+
 void Heap::siftUp(int index) {
     while (index > 0) {
         int parent_index = (index - 1) / 2;
