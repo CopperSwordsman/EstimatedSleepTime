@@ -3,3 +3,5 @@
 //
 
 #include "Heap.h"
+
+Heap::Heap(const std::function<bool(const InfoNode *, const InfoNode *)>& compare) : compare(compare) {}
