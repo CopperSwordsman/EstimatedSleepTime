@@ -60,3 +60,16 @@ const InfoNode* Heap::top() const {
     }
     return heapData[0];
 }
+
+const InfoNode* Heap::extract() {
+    if (isEmpty()) {
+        std::cerr << "Heap is empty" << std::endl;
+        return nullptr;
+    }
+
+    InfoNode* node_ptr = heapData[0];
+    heapData[0] = heapData[heapData.size() - 1];
+    heapData.pop_back();
+    siftDown(0);
+    return node_ptr;
+}
