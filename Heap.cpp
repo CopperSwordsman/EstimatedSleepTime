@@ -13,6 +13,20 @@ Heap::~Heap() {
     }
 }
 
+void Heap::siftUp(int index) {
+    while (index > 0) {
+        int parent_index = (index - 1) / 2;
+
+        // If child has more priority than parent, swap
+        if (compare(heapData[index], heapData[parent_index])) {
+            std::swap(heapData[index], heapData[parent_index]);
+            index = parent_index;
+        } else {
+            break;
+        }
+    }
+}
+
 bool Heap::isEmpty() const {return heapData.empty();}
 
 const InfoNode* Heap::top() const {
