@@ -13,8 +13,56 @@ RBNode::RBNode(int sleepQuality_) {
 void RBNode::addNode(InfoNode info_node) {
    nodes.push_back(info_node);
 }
+double RBNode::totalAmount(int which) {
+    double size = static_cast<int>(nodes.size());
+    if (which == static_cast<int>(InfoNodeType::sleepDuration)) {
+        int durationTotal = 0;
+        for (int i = 0; i<size;i++) {
+            durationTotal += nodes[i].sleepDuration;
+        }
+        return static_cast<int>(durationTotal);
+    }
+    if (which == static_cast<int>(InfoNodeType::sleepLatency)) {
+        int latencyTotal = 0;
+        for (int i = 0; i<size;i++) {
+            latencyTotal+= nodes[i].sleepLatency;
+        }
+        return static_cast<int>(latencyTotal);
+    }
+    if (which == static_cast<int>(InfoNodeType::stressScore)) {
+        double stressTotal = 0;
+        for (int i = 0; i<nodes.size();i++) {
+            stressTotal += nodes[i].stressScore;
+        }
+        return stressTotal;
+    }
+    if (which == static_cast<int>(InfoNodeType::workHours)) {
+        double workTotal = 0;
+        for (int i = 0; i<nodes.size();i++) {
+            workTotal += nodes[i].workHours;
+        }
+        return workTotal;
+    }
+    if (which == static_cast<int>(InfoNodeType::caffeineMg)) {
+        double caffeineTotal = 0;
+        for (int i = 0; i<nodes.size();i++) {
+            caffeineTotal += nodes[i].caffeineMg;
+        }
+        return caffeineTotal;
+    }
+    if (which == static_cast<int>(InfoNodeType::screenTime)) {
+        double screenTotal = 0;
+        for (int i = 0; i<nodes.size();i++) {
+            screenTotal += nodes[i].screenTime;
+        }
+        return screenTotal;
+    }
+}
 double RBNode::averageValue(int which) {
     double size = static_cast<int>(nodes.size());
+    if (size == 0) {
+        return -1;
+    }
     if (which == static_cast<int>(InfoNodeType::sleepDuration)) {
         int durationTotal = 0;
         for (int i = 0; i<size;i++) {
@@ -105,7 +153,7 @@ void RBTree::insertCorrection(RBNode* k) {
     //we just traverse the loop and either do a simple color swap and rotate or double rotate
     while (k!= root && k->parent->color == Color::Red) {
         if (k->parent == k->parent->parent->left) {
-            RBNode* uncle = k->parent->parent->left;
+            RBNode* uncle = k->parent->parent->right;
             if (uncle->color == Color::Red) {
                 k->parent->color = Color::Black;
                 uncle->color = Color::Black;
@@ -128,7 +176,7 @@ void RBTree::insertCorrection(RBNode* k) {
 
             if (uncle->color == Color::Red) {
                 k->parent->color = Color::Black;
-                uncle->color = Color::Black;;
+                uncle->color = Color::Black;
                 k->parent->parent->color = Color::Red;
                 k = k->parent->parent;
             } else {
@@ -136,7 +184,7 @@ void RBTree::insertCorrection(RBNode* k) {
                     k = k->parent;
                     rightRotate(k);
                 }
-                k->parent->color = Color::Black;;
+                k->parent->color = Color::Black;
                 k->parent->parent->color = Color::Red;
                 leftRotate(k->parent->parent);
             }
@@ -201,5 +249,18 @@ RBNode& CustomMap::operator[](int sleepQuality_) {
     //all we want this to do is return a reference to the RBNode if it exists, if it doesn't exist we can safely make a new node
     return *tree.getNode(sleepQuality_);
 
+}
+double CustomMap::averageValues(int which, int start, int end) {
+    double total = 0;
+    int count = 0;
+    for (int i = start;i<=end;i++) {;
+        RBNode& tempnode = *tree.getNode(i);
+        total += tempnode.totalAmount(which);
+        count += tempnode.nodes.size();
+    }
+    if (count > 0) {
+        return total / count;
+    }
+    return -1;
 }
 CustomMap::CustomMap() {}
