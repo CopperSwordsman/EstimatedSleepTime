@@ -23,6 +23,7 @@ public:
     RBNode* parent;
     std::vector<InfoNode> nodes;
     void addNode(InfoNode node);
+    double totalAmount(int which);
     double averageValue(int which);
     RBNode(int sleepQuality_);
 };
@@ -40,8 +41,11 @@ public:
 class CustomMap {
     RBTree tree;
 
+
 public:
+    double averageValues(int which, int start, int end);
     RBNode& operator[](int sleepQuality_);
     CustomMap();
 };
+
 #endif //ESTIMATEDSLEEPTIME_MAPS_H
