@@ -23,5 +23,6 @@ public:
     bool isEmpty() const;
     const InfoNode* top() const;
     const InfoNode* extract();
+    const std::vector<InfoNode*>& getHeapData() const;
 };
 #endif //ESTIMATEDSLEEPTIME_HEAP_H

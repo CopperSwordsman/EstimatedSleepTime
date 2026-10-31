@@ -73,3 +73,5 @@ const InfoNode* Heap::extract() {
     siftDown(0);
     return node_ptr;
 }
+
+const std::vector<InfoNode*>& Heap::getHeapData() const {return heapData;}
