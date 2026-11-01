@@ -21,7 +21,9 @@ add_executable(EstimatedSleep
         main.cpp
         Load_window.cpp
         compile.cpp
-        handling.cpp)
+        handling.cpp
+        Load_window.cpp
+        Load_window.cpp)
 target_link_libraries(EstimatedSleep PRIVATE SFML::Graphics)
 
 configure_file(${CMAKE_SOURCE_DIR}/sleep_health_dataset.csv

@@ -1,17 +1,50 @@
 #include "Load_window.h"
 using namespace std;
 using namespace sf;
+#include <ctime>
+#include <cstdio>
+
 
 
 
 Game::Game(): window(sf::VideoMode({600,900}),"EST"), box({100.f,100.f})
-, bgTexture("assests/EST_test.png"),bgSprite(bgTexture) {
+, bgTexture("assests/menu_back.png"),bgSprite(bgTexture),
+star1("assests/star1.png"),star1_sprite_(star1),
+star2("assests/star2.png"),star2_sprite_(star2) ,
+star3("assests/star3.png"),star3_sprite_(star3) ,
+star4("assests/star4.png"),star4_sprite_(star4),
+z1("assests/z1.png"), z1_sprite((z1)),
+z2("assests/z2.png"), z2_sprite((z2)),
+z3("assests/z3.png"), z3_sprite((z3))
+
+
+{
+    clockText.setFillColor(sf::Color(255,240,222));
     window.setFramerateLimit(60);
     bgSprite.setScale({WIDTH/bgTexture.getSize().x, HEIGHT/bgTexture.getSize().y
 });
 
     updateView();
 }
+void Game:: drawStar(Sprite& s, float speed, float offset)
+{
+    float t = 0.5f +0.5f * std::sin(life_time * speed + offset);
+    s.setColor(sf::Color(255,255,255,uint8_t(195*t)));
+    window.draw(s);
+}
+
+string Game::getTime_string() {
+    time_t now = time(nullptr);
+    tm* t = localtime(&now);
+    int hour = t->tm_hour % 12;
+    if (hour==0) {
+        hour=12;
+    }
+    char buffer[16];
+    snprintf(buffer,sizeof(buffer),"%d:%02d %s",hour,t->tm_min,t->tm_hour <12 ? "am" : "pm");
+    return buffer;
+}
+
 void Game::run()
 {
     Clock clock;
@@ -37,12 +70,28 @@ void Game::processEvents()
 }
 void Game::update(float dt) //
 {
-
+    clockText.setString(getTime_string());
+    FloatRect bound= clockText.getLocalBounds();
+    clockText.setOrigin({bound.position.x + bound.size.x/2.f,bound.position.y + bound.size.y/2.f
+} );
+    clockText.setPosition({WIDTH/2.f, HEIGHT/1.507});
+    life_time+= dt;
 }
 
 void Game::render() {
     window.clear(sf::Color::Black);
   window.draw(bgSprite);
+   drawStar(star1_sprite_,3.f, 0.0f);
+    drawStar(star2_sprite_,3.f, 1.6f);
+    drawStar(star3_sprite_,3.f, 3.1f);
+    drawStar(star1_sprite_,3.f, 4.7f);
+
+    drawStar(z1_sprite,1.5,16.f);
+    drawStar(z2_sprite,1.5,8.f);
+    drawStar(z3_sprite,1.5,0.f);
+    window.draw(clockText);
+
+
     window.display();
 }
 
