@@ -7,14 +7,14 @@
 #include <map>
 #include <vector>
 #include <utility>
-#include <string>
+#include "maps.h"
 
 class compiler {
-    std::map<int, std::vector<std::pair<double, double>>> sleepMap;
-
 public:
     compiler();
-    void compile();
-    void iterate(int key) const;
+    void compile(CustomMap& sleepMap);
+    double calculateSleepQuality(int sleepDuration, int latencyDuration);
+    double calculateLatencyScore(int latencyDuration);
+    double calculateSleepDurationScore(int sleepDuration);
 };
 #endif //ESTIMATEDSLEEPTIME_COMPILE_H
