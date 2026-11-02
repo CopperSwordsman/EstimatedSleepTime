@@ -30,12 +30,24 @@ private:
     sf::Texture star4;
     sf::Sprite star4_sprite_;
 
-    sf:: Texture z1;
+    sf:: Texture z1; //ZZZ textures
     sf::Sprite z1_sprite;
     sf:: Texture z2;
     sf::Sprite z2_sprite;
     sf:: Texture z3;
     sf::Sprite z3_sprite;
+
+    sf::Texture sleep_trend_button;
+    sf::Sprite sleep_trend_sprite;
+    sf::Texture sleep_trend_glow;
+    sf::Sprite sleep_glow_sprite;
+
+    //Button template
+    bool is_button_hovered;
+    sf::FloatRect button_area{{185.f,1300.f}, {800.f,168.f}};
+    bool button_hover=0;
+
+
 
 
 
@@ -44,7 +56,7 @@ private:
     std:: string getTime_string();
 
     //UPDATE STARS
-    float life_time;
+    float life_time=0.f;
     void drawStar(sf:: Sprite& s, float speed, float offset);
 
 
