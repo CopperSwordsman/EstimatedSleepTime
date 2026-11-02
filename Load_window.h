@@ -20,27 +20,27 @@ private:
     sf::RectangleShape box;
     sf::Texture bgTexture;//Menu Texture
     sf::Sprite bgSprite;
-
-    sf::Texture star1;           //STAR TEXTUREs
-    sf::Sprite star1_sprite_;
-    sf::Texture star2;
-    sf::Sprite star2_sprite_;
-    sf::Texture star3;
-    sf::Sprite star3_sprite_;
-    sf::Texture star4;
-    sf::Sprite star4_sprite_;
-
-    sf:: Texture z1; //ZZZ textures
-    sf::Sprite z1_sprite;
-    sf:: Texture z2;
-    sf::Sprite z2_sprite;
-    sf:: Texture z3;
-    sf::Sprite z3_sprite;
-
-    sf::Texture sleep_trend_button;
-    sf::Sprite sleep_trend_sprite;
-    sf::Texture sleep_trend_glow;
-    sf::Sprite sleep_glow_sprite;
+    //
+    // sf::Texture star1;           //STAR TEXTUREs
+    // sf::Sprite star1_sprite_;
+    // sf::Texture star2;
+    // sf::Sprite star2_sprite_;
+    // sf::Texture star3;
+    // sf::Sprite star3_sprite_;
+    // sf::Texture star4;
+    // sf::Sprite star4_sprite_;
+    //
+    // sf:: Texture z1; //ZZZ textures
+    // sf::Sprite z1_sprite;
+    // sf:: Texture z2;
+    // sf::Sprite z2_sprite;
+    // sf:: Texture z3;
+    // sf::Sprite z3_sprite;
+    //
+    // sf::Texture sleep_trend_button;
+    // sf::Sprite sleep_trend_sprite;
+    // sf::Texture sleep_trend_glow;
+    // sf::Sprite sleep_glow_sprite;
 
     //Button template
     bool is_button_hovered;
@@ -51,9 +51,9 @@ private:
 
 
 
-    sf::Font font{"assests/Montserrat-ExtraLight.ttf"};
-    sf:: Text clockText{font,"", 150};
-    std:: string getTime_string();
+    // sf::Font font{"assests/Montserrat-ExtraLight.ttf"};
+    // sf:: Text clockText{font,"", 150};
+    // std:: string getTime_string();
 
     //UPDATE STARS
     float life_time=0.f;
