@@ -55,8 +55,8 @@ Game::Game(): window(sf::VideoMode({600,900}),"EST"), box({100.f,100.f})
               heap_button("assests/Heap_button.png"), heap_sprite((heap_button)),
               heap_glow("assests/Heap_glow.png"), heap_glow_sprite((heap_glow)),
 
-                heap_vs_button(heap_button,heap_glow, {185.f,1400.f}, {130.f,1382.f}),
-                sleep_trend_but(sleep_trend_button, sleep_trend_glow,{185.f,1200.f},{101.f,1170.f} )
+                heap_vs_button(heap_button,heap_glow, {185.f,1400.f}, {174.f,1382.f}),
+                sleep_trend_but(sleep_trend_button, sleep_trend_glow,{185.f,1200.f},{174.f,1182.f} )
 
 {
     clockText.setFillColor(sf::Color(255,240,240));
