@@ -22,6 +22,10 @@ public:
     Game();
     void run();
 private:
+    enum class Screen {menu, Sleep_Trends, Heap_vs_Map};
+    Screen screen=Screen::menu;
+    void renderMenu();
+    void renderSleepTrends();
     void processEvents();
     void update(float dt);
     void render();
@@ -33,6 +37,9 @@ private:
     sf::RectangleShape box;
     sf::Texture bgTexture;//Menu Texture
     sf::Sprite bgSprite;
+
+    sf::Texture Sleep_trend_texture;  //Sleep Trend screen
+    sf::Sprite Sleep_trend_Sprite;
     //
     sf::Texture star1;           //STAR TEXTUREs
     sf::Sprite star1_sprite_;

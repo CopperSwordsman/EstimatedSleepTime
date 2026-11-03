@@ -41,6 +41,8 @@ void Button::draw(sf::RenderWindow &window) {
 Game::Game(): window(sf::VideoMode({600,900}),"EST"), box({100.f,100.f})
              ,
               bgTexture("assests/menu_back.png"),bgSprite(bgTexture),
+            Sleep_trend_texture("assests/sleep_trend_screen.png"),Sleep_trend_Sprite(Sleep_trend_texture),
+
               star1("assests/star1.png"),star1_sprite_(star1),
               star2("assests/star2.png"),star2_sprite_(star2) ,
               star3("assests/star3.png"),star3_sprite_(star3) ,
@@ -110,14 +112,19 @@ void Game::processEvents()
         else if (const auto* m = event->getIf<Event::MouseButtonPressed>())
         {
             Vector2f p= window.mapPixelToCoords(m->position);
-            if(sleep_trend_but.area.contains(p))
+            if (screen== Screen::menu)
             {
-                cout<<"SLEEP TREND BUTTON WORKS"<<endl;
-            }
+                if(sleep_trend_but.area.contains(p))
+                {
+                    screen=Screen::Sleep_Trends;
+                    cout<<"SLEEP TREND BUTTON WORKS"<<endl;
+                }
 
-            if(heap_vs_button.area.contains(p))
-            {
-                cout<<"HEAP BUTTON WORKS"<<endl;
+                if(heap_vs_button.area.contains(p))
+                {
+                    screen=Screen::Heap_vs_Map;
+                    cout<<"HEAP BUTTON WORKS"<<endl;
+                }
             }
         }
     }
@@ -143,10 +150,10 @@ void Game::update(float dt) //
     sleep_trend_but.update(mouse, dt);
 }
 
-void Game::render() {
-    window.clear(sf::Color::Black);
-  window.draw(bgSprite);
-   drawStar(star1_sprite_,3.f, 0.0f);
+void Game::renderMenu()
+{
+    window.draw(bgSprite);
+    drawStar(star1_sprite_,3.f, 0.0f);
     drawStar(star2_sprite_,3.f, 1.6f);
     drawStar(star3_sprite_,3.f, 3.1f);
     drawStar(star4_sprite_,3.f, 4.7f);
@@ -157,17 +164,26 @@ void Game::render() {
 
     window.draw(clockText);
 
-    // sleep_glow_sprite.setColor(Color(255,255,255,uint8_t(255 * button_hover)));
-    // if (button_hover)
-    //     window.draw(sleep_glow_sprite);
-
-    // window.draw(sleep_trend_sprite);
     heap_vs_button.draw(window);
     sleep_trend_but.draw(window);
+}
+void Game::renderSleepTrends()
+{
+
+    window.draw(Sleep_trend_Sprite);
+
+}
 
 
-
-
+void Game::render() {
+    window.clear(sf::Color::Black);
+    if (screen== Screen::menu)
+    {
+    renderMenu();
+    }
+    else if (screen == Screen::Sleep_Trends) {
+        renderSleepTrends();
+    }
 
     window.display();
 }
