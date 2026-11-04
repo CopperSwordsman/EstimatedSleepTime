@@ -8,7 +8,11 @@
 #include "infonode.h"
 
 
-
+static sf::ContextSettings makeSettings() {
+    sf::ContextSettings s;
+    s.antiAliasingLevel=8;
+    return s;
+}
 struct GraphLine {
     std::string name;
     std::string unit;
@@ -17,7 +21,7 @@ struct GraphLine {
     std::vector<float> values;
     bool visible = true;
 };
-void drawLine(sf::Vector2f a, sf:: Vector2f b, float thickness, sf::Color color);
+
 
 
 struct Button {
@@ -30,7 +34,7 @@ struct Button {
     sf::Vector2f label_position, sf::Vector2f glow_position);
 
     void refresh(const sf::Texture& label_texture, const sf::Texture& glow_texture);
-    void update(sf::Vector2f mouse, float dt);
+    void update(sf::Vector2f mouse, float dt,bool keepGlow=false);
     void draw(sf::RenderWindow& window);
 
 };
@@ -53,11 +57,28 @@ private:
     void updateView();
     static constexpr float WIDTH = 1200.f;
     static constexpr float HEIGHT = 1800.f;
+    //CHIPS
+    sf::Texture chipTex[4]=
+        {
+        sf::Texture("assests/stress_chip.png"),
+        sf::Texture("assests/caffeine_chip.png"),
+        sf::Texture("assests/Screen_time_chip.png"),
+        sf::Texture("assests/work_chip.png")
+    };
+    void drawChips();
+
+    sf::Texture chipGlowTex{"assests/chip_glow.png"};
+    std::vector<Button> chips;
+
     //Graph
     sf::FloatRect plotArea{{120.f, 447.f},{950.f,615.f}};
     float xForBuckect(int i) const;
     float yForValue(float val, float min_val,float max_val)const;
-    void drawGraph();
+    void drawGraph(int line_index);
+
+    void drawLine(sf::Vector2f a, sf:: Vector2f b, float thickness, sf::Color color);
+    sf::Texture dot_glow;
+    sf::Vector2f mouse_pos;
 
     sf::RenderWindow window;
     sf::RectangleShape box;

@@ -28,10 +28,11 @@ void Button::refresh(const sf::Texture &label_texture, const sf::Texture &glow_t
 
 }
 
-void Button::update(sf::Vector2f mouse, float dt)
+void Button::update(sf::Vector2f mouse, float dt, bool keepGlow)
 {
+
     float target;
-    if (area.contains(mouse))
+    if (keepGlow || area.contains(mouse))
      target=1.f;
     else
         target= 0.f;
@@ -41,12 +42,13 @@ void Button::update(sf::Vector2f mouse, float dt)
 
 }
 
-void Button::draw(sf::RenderWindow &window) {
+void Button::draw(sf::RenderWindow &window)
+    {
     window.draw(glow);
     window.draw(label);
-}
+    }
 
-Game::Game(): window(sf::VideoMode({600,900}),"EST"), box({100.f,100.f})
+Game::Game(): window(sf::VideoMode({600,900}),"EST",sf::Style::Default,sf::State:: Windowed, makeSettings()), box({100.f,100.f})
              ,
               bgTexture("assests/menu_back.png"),bgSprite(bgTexture),
             Sleep_trend_texture("assests/sleep_trend_screen.png"),Sleep_trend_Sprite(Sleep_trend_texture),
@@ -66,7 +68,8 @@ Game::Game(): window(sf::VideoMode({600,900}),"EST"), box({100.f,100.f})
               heap_glow("assests/Heap_glow.png"), heap_glow_sprite((heap_glow)),
 
                 heap_vs_button(heap_button,heap_glow, {185.f,1400.f}, {174.f,1382.f}),
-                sleep_trend_but(sleep_trend_button, sleep_trend_glow,{185.f,1200.f},{174.f,1182.f} )
+                sleep_trend_but(sleep_trend_button, sleep_trend_glow,{185.f,1200.f},{174.f,1182.f} ),
+                dot_glow("assests/dot_glow.png")
 
 {
     clockText.setFillColor(sf::Color(255,240,240));
@@ -78,15 +81,21 @@ Game::Game(): window(sf::VideoMode({600,900}),"EST"), box({100.f,100.f})
     compiler c;
     c.compile(sleepMap);
 
-    lines= {
-        {"Sleep ",  "hrs", InfoNodeType:: sleepDuration, sf::Color(185,168,255)},
-        {"Stress ",  "/10", InfoNodeType:: stressScore, sf::Color(255,143,163)},
+    lines=
+    {
+        {"Stress",  "/10", InfoNodeType:: stressScore, sf::Color(255,143,163)},
         {"Cafeine",  "mg", InfoNodeType:: caffeineMg, sf::Color(255,200,112)},
-        {"Screen time ",  "min", InfoNodeType:: screenTime, sf::Color(111,227,230)},
-        {"Work ",  "hrs", InfoNodeType:: workHours, sf::Color(142,227,161)}
+        {"Screen time",  "min", InfoNodeType:: screenTime, sf::Color(111,227,230)},
+        {"Work",  "hrs", InfoNodeType:: workHours, sf::Color(142,227,161)}
 
     };
     load_map_data();
+    for (int i=0; i<4; i++) //positiong chips
+    {
+        Vector2f pos(120.f+i * 243.f, 1205.f);
+        chips.emplace_back(chipTex[i],chipGlowTex,pos,pos-Vector2f(11.f,11.f));
+
+    }
 }
 
 void Game::load_map_data()
@@ -107,10 +116,12 @@ void Game::load_map_data()
 
         bucketLabels.push_back(to_string(start)+"-"+ to_string (end));
 
-        for (auto& line : lines) {
+        for (auto& line : lines)
+        {
             double avg= sleepMap.averageValues(static_cast<int>(line.which),start,end);
 
-            if (line.which == InfoNodeType::sleepDuration) {
+            if (line.which == InfoNodeType::sleepDuration)
+            {
                 avg /= 60;
 
             }
@@ -130,7 +141,8 @@ void Game::load_map_data()
 
 }
 //GRAPH MAKING START------------------------------
-float Game::xForBuckect(int i) const {
+float Game::xForBuckect(int i) const
+{
     const float pad= 50.f;
     float usable = plotArea.size.x-2 *pad;
     float step= usable / (bucketLabels.size()-1);
@@ -146,34 +158,92 @@ float Game::yForValue(float val, float min_val, float max_val) const
     return bottom-t * usable;
 }
 
-void Game::drawGraph()
+void Game::drawGraph(int line_index)
 {
-    const GraphLine& line = lines[3]; //1 is stress 2 is caefine 3 is screen time before bed 4 is stress
+
+
+    const GraphLine& line = lines[line_index];
+    if (!line.visible)
+        return;
+
+    //0 is sleep time(purple) 1 is stress (pink) 2 is caefine(yellow)
+    //3 is screen time before bed (blue)  4 is work (GREEN)
     float min_val =*min_element(line.values.begin(),line.values.end());
     float max_val= *max_element(line.values.begin(), line.values.end());
 
-    for (int i=0; i<(int) line.values.size(); i++)
+    vector<Vector2f> points;
+    for (int i=0; i<(int) line.values.size(); i++)   //Dot positions pushed into a vector
     {
+        points.push_back({xForBuckect(i),yForValue(line.values[i], min_val, max_val) });
+    }
+    sf::Color glow =line.color;
+    glow.a = 80;
+
+    for (int i=0; i+1<(int) points.size(); i++)
+    {
+        drawLine(points[i], points[i+1], 9.f, glow);
+        drawLine(points[i], points[i+1], 4.f, line.color);
+    }
+
+
+    for (Vector2f p: points) ///Drawing dots
+    {
+        Vector2f d= mouse_pos-p;
+
+        bool hovered= (d.x* d.x + d.y*d.y)<20.f *20.f;
+
+
         CircleShape dot(8);
         dot.setOrigin({8,8});
 
-        dot.setPosition({xForBuckect(i), yForValue(line.values[i], min_val, max_val)});
+        dot.setPosition(p);
         dot.setFillColor(line.color);
         window.draw(dot);
+        if (hovered)
+
+        {
+            Sprite glowSprite(dot_glow);
+            glowSprite.setOrigin({24.f,24.f});
+            glowSprite.setPosition(p);
+            glowSprite.setColor(line.color);
+            window.draw(glowSprite);
+        }
 
     }
 
 
 }
-void drawLine(sf::Vector2f a, sf::Vector2f b, float thickness, sf::Color color)
+void Game::drawLine(sf::Vector2f a, sf::Vector2f b, float thickness, sf::Color color)
 {
     Vector2f d = b-a;
     float length = sqrt(d.x *d.x + d.y * d.y);
+    RectangleShape bar ({length, thickness});
+    bar.setOrigin({0.f, thickness/2.f});
+    bar.setPosition(a);
+    bar.setRotation(radians(atan2(d.y,d.x)));
+    bar.setFillColor(color);
+    window.draw(bar);
+
 
 
 }
 
 //GRAPH MAKING END---------------------------------------
+void Game:: drawChips()
+{
+    for (int i=0; i< (int)chips.size(); i++)
+    {
+        if (lines[i].visible) {
+            chips[i].label.setColor(sf::Color::White);
+
+        }
+        else
+            chips[i].label.setColor(sf::Color(255,255,255,110));
+
+        chips[i].draw(window);
+    }
+
+}
 void Game:: drawStar(Sprite& s, float speed, float offset)
 {
     float t = 0.5f +0.5f * std::sin(life_time * speed + offset);
@@ -181,7 +251,8 @@ void Game:: drawStar(Sprite& s, float speed, float offset)
     window.draw(s);
 }
 
-string Game::getTime_string() {
+string Game::getTime_string()
+{
     time_t now = time(nullptr);
     tm* t = localtime(&now);
     int hour = t->tm_hour % 12;
@@ -228,7 +299,16 @@ void Game::processEvents()
                 if(sleep_trend_but.area.contains(p))
                 {
                     screen=Screen::Sleep_Trends;
+
                     cout<<"SLEEP TREND BUTTON WORKS"<<endl;
+
+                    for (int i=0; i< (int)chips.size(); i++)
+                    {
+                        if (chips[i].area.contains(p))
+                            lines[i].visible = !lines[i].visible;
+                    }
+
+
                 }
 
                 if(heap_vs_button.area.contains(p))
@@ -236,6 +316,16 @@ void Game::processEvents()
                     screen=Screen::Heap_vs_Map;
                     cout<<"HEAP BUTTON WORKS"<<endl;
                 }
+            }
+            else if (screen==Screen::Sleep_Trends)
+            {
+               for (int i=0; i<(int)chips.size();i++)
+               {
+                   if (chips[i].area.contains(p))
+                   {
+                       lines[i].visible= !lines[i].visible;
+                   }
+               }
             }
         }
     }
@@ -251,6 +341,7 @@ void Game::update(float dt)
     //Mouse hover
     Vector2f mouse;
     mouse=window.mapPixelToCoords(Mouse::getPosition(window));
+    mouse_pos=mouse;
     //
     // button_hover+= (target - button_hover)*10 * dt;
 
@@ -258,6 +349,10 @@ void Game::update(float dt)
     // sleep_glow_sprite.setPosition({97.f,1171.f});
     heap_vs_button.update(mouse, dt);
     sleep_trend_but.update(mouse, dt);
+    for (int i = 0; i<(int)chips.size(); i++)
+    {
+        chips[i].update(mouse,dt,lines[i].visible);
+    }
 }
 
 void Game::renderMenu()
@@ -281,7 +376,15 @@ void Game::renderSleepTrends()
 {
 
     window.draw(Sleep_trend_Sprite);
-    drawGraph();
+    for (int i=0; i<(int)lines.size(); i++) {
+        drawGraph(i);
+
+    }
+    drawChips();
+
+
+
+
 
 }
 

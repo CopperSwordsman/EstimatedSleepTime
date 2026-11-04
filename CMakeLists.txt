@@ -18,9 +18,10 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 add_executable(EstimatedSleep
+
         main.cpp
         Load_window.cpp
-        compile.cpp
+        compile.h
         handling.cpp
         compile.cpp
         maps.cpp
@@ -29,5 +30,7 @@ add_executable(EstimatedSleep
         infonode.h
         Heap.cpp
         Heap.h
+
 )
+target_link_libraries(EstimatedSleep PRIVATE SFML::Graphics)
 configure_file(${CMAKE_SOURCE_DIR}/sleep_health_dataset.csv ${CMAKE_BINARY_DIR}/sleep_health_dataset.csv COPYONLY)
