@@ -1,0 +1,28 @@
+//
+// Created by ericl on 10/26/2026.
+//
+
+#ifndef ESTIMATEDSLEEPTIME_HEAP_H
+#define ESTIMATEDSLEEPTIME_HEAP_H
+#include <functional>
+#include <vector>
+#include "infonode.h"
+
+class Heap {
+private:
+    std::function<bool(const InfoNode*, const InfoNode*)> compare; // comparator for min/max heap
+    std::vector<InfoNode*> heapData;
+public:
+    explicit Heap(const std::function<bool(const InfoNode*, const InfoNode*)>& compare);
+    Heap(const Heap&) = delete; // don't use copy constructor
+    Heap& operator=(const Heap&) = delete; // don't use copy assignment operator
+    ~Heap();
+    void push(InfoNode* node_ptr);
+    void siftUp(int index);
+    void siftDown(int index);
+    bool isEmpty() const;
+    const InfoNode* top() const;
+    const InfoNode* extract();
+    const std::vector<InfoNode*>& getHeapData() const;
+};
+#endif //ESTIMATEDSLEEPTIME_HEAP_H

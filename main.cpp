@@ -1,7 +1,6 @@
 #include <iostream>
 #include "compile.h"
 #include "maps.h"
-#include "Load_window.h"
 int main() {
     /*
     mapCompiler c;
@@ -32,9 +31,9 @@ int main() {
         caffeineMg,
         screenTime
     };
-    // CustomMap m;
-    // compiler c;
-    // c.compile(m);
+    CustomMap m;
+    compiler c;
+    c.compile(m);
     /*for (int i = 5;i<=100;i++) {
         std::cout << i << " Sleep Quality\n";
         std::cout << "Sleep Duration: " << m[i].averageValue(sleepDuration) << std::endl;
@@ -44,17 +43,11 @@ int main() {
         std::cout << "Caffeine MG: " << m[i].averageValue(caffeineMg) << std::endl;
         std::cout << "Screen Time: " << m[i].averageValue(screenTime) << "\n"<< std::endl;
     }*/
-    // std::cout << m.averageValues(sleepDuration,95,100) << std::endl;
-    // std::cout << m.averageValues(sleepLatency,95,100) << std::endl;
-    // std::cout << m.averageValues(stressScore,95,100) << std::endl;
-    // std::cout << m.averageValues(workHours,95,100) << std::endl;
-    // std::cout << m.averageValues(screenTime,95,100) << std::endl;
-    // std::cout << m.averageValues(caffeineMg,95,100) << std::endl;
-
-    Game EST;
-    EST.run();
-
-
-
+    std::cout << m.averageValues(sleepDuration,95,100) << std::endl;
+    std::cout << m.averageValues(sleepLatency,95,100) << std::endl;
+    std::cout << m.averageValues(stressScore,95,100) << std::endl;
+    std::cout << m.averageValues(workHours,95,100) << std::endl;
+    std::cout << m.averageValues(screenTime,95,100) << std::endl;
+    std::cout << m.averageValues(caffeineMg,95,100) << std::endl;
     return 0;
 }
