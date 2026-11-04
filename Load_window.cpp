@@ -6,6 +6,9 @@ using namespace sf;
 #include <iostream>
 #include <algorithm>
 
+
+
+
 Button::Button(const sf::Texture &label_texture, const sf::Texture &glow_texture, sf::Vector2f label_position, sf::Vector2f glow_position):
 label(label_texture), glow(glow_texture)
 
@@ -145,7 +148,7 @@ float Game::yForValue(float val, float min_val, float max_val) const
 
 void Game::drawGraph()
 {
-    const GraphLine& line = lines[4]; //1 is stress 2 is caefine 3 is screen time before bed 4 is stress
+    const GraphLine& line = lines[3]; //1 is stress 2 is caefine 3 is screen time before bed 4 is stress
     float min_val =*min_element(line.values.begin(),line.values.end());
     float max_val= *max_element(line.values.begin(), line.values.end());
 
@@ -159,6 +162,15 @@ void Game::drawGraph()
         window.draw(dot);
 
     }
+
+
+}
+void drawLine(sf::Vector2f a, sf::Vector2f b, float thickness, sf::Color color)
+{
+    Vector2f d = b-a;
+    float length = sqrt(d.x *d.x + d.y * d.y);
+
+
 }
 
 //GRAPH MAKING END---------------------------------------

@@ -17,6 +17,7 @@ struct GraphLine {
     std::vector<float> values;
     bool visible = true;
 };
+void drawLine(sf::Vector2f a, sf:: Vector2f b, float thickness, sf::Color color);
 
 
 struct Button {
