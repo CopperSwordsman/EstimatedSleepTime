@@ -6,6 +6,7 @@
 #include "maps.h"
 #include "compile.h"
 #include "infonode.h"
+#include "Heap.h"
 
 
 static sf::ContextSettings makeSettings() {
@@ -44,6 +45,8 @@ public:
     void run();
 private:
     CustomMap sleepMap;
+    Heap maxHeap;
+    Heap minHeap;
     std:: vector<GraphLine> lines;
     std::vector<std::string> bucketLabels;
     void load_map_data();
