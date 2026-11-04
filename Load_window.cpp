@@ -50,26 +50,26 @@ void Button::draw(sf::RenderWindow &window)
 
 Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State:: Windowed, makeSettings()), box({100.f,100.f})
              ,
-              bgTexture("assests/menu_back.png"),bgSprite(bgTexture),
-            Sleep_trend_texture("assests/sleep_trend_screen.png"),Sleep_trend_Sprite(Sleep_trend_texture),
+              bgTexture("assets/menu_back.png"),bgSprite(bgTexture),
+            Sleep_trend_texture("assets/sleep_trend_screen.png"),Sleep_trend_Sprite(Sleep_trend_texture),
 
-              star1("assests/star1.png"),star1_sprite_(star1),
-              star2("assests/star2.png"),star2_sprite_(star2) ,
-              star3("assests/star3.png"),star3_sprite_(star3) ,
-              star4("assests/star4.png"),star4_sprite_(star4),
-              z1("assests/z1.png"), z1_sprite((z1)),
-              z2("assests/z2.png"), z2_sprite((z2)),
-              z3("assests/z3.png"), z3_sprite((z3)),
+              star1("assets/star1.png"),star1_sprite_(star1),
+              star2("assets/star2.png"),star2_sprite_(star2) ,
+              star3("assets/star3.png"),star3_sprite_(star3) ,
+              star4("assets/star4.png"),star4_sprite_(star4),
+              z1("assets/z1.png"), z1_sprite((z1)),
+              z2("assets/z2.png"), z2_sprite((z2)),
+              z3("assets/z3.png"), z3_sprite((z3)),
 
 
-              sleep_trend_button("assests/sleep_trend_button.png"), sleep_trend_sprite((sleep_trend_button)),
-              sleep_trend_glow("assests/sleep_trend_glow.png"), sleep_glow_sprite((sleep_trend_glow)),
-              heap_button("assests/Heap_button.png"), heap_sprite((heap_button)),
-              heap_glow("assests/Heap_glow.png"), heap_glow_sprite((heap_glow)),
+              sleep_trend_button("assets/sleep_trend_button.png"), sleep_trend_sprite((sleep_trend_button)),
+              sleep_trend_glow("assets/sleep_trend_glow.png"), sleep_glow_sprite((sleep_trend_glow)),
+              heap_button("assets/Heap_button.png"), heap_sprite((heap_button)),
+              heap_glow("assets/Heap_glow.png"), heap_glow_sprite((heap_glow)),
 
                 heap_vs_button(heap_button,heap_glow, {185.f,1400.f}, {174.f,1382.f}),
                 sleep_trend_but(sleep_trend_button, sleep_trend_glow,{185.f,1200.f},{174.f,1182.f} ),
-                dot_glow("assests/dot_glow.png")
+                dot_glow("assets/dot_glow.png")
 
 {
     clockText.setFillColor(sf::Color(255,240,240));

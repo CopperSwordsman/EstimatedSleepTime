@@ -87,20 +87,20 @@ private:
     int hoverLine=-1;
     int hoverDot=-1;
     sf::Vector2f hoverPos;
-    sf::Texture tooltipTex{"assests/Info_square.png    "};
+    sf::Texture tooltipTex{"assets/Info_square.png    "};
     std::string formatValue(float v)const;
     void drawTooltip();
     //CHIPS
     sf::Texture chipTex[4]=
         {
-        sf::Texture("assests/stress_chip.png"),
-        sf::Texture("assests/caffeine_chip.png"),
-        sf::Texture("assests/Screen_time_chip.png"),
-        sf::Texture("assests/work_chip.png")
+        sf::Texture("assets/stress_chip.png"),
+        sf::Texture("assets/caffeine_chip.png"),
+        sf::Texture("assets/Screen_time_chip.png"),
+        sf::Texture("assets/work_chip.png")
     };
     void drawChips();
 
-    sf::Texture chipGlowTex{"assests/chip_glow.png"};
+    sf::Texture chipGlowTex{"assets/chip_glow.png"};
     std::vector<Button> chips;
 
     //Graph
@@ -159,7 +159,7 @@ private:
 
 
 
-    sf::Font font{"assests/Montserrat-Light.ttf"};
+    sf::Font font{"assets/Montserrat-Light.ttf"};
     sf:: Text clockText{font,"", 160};
     std:: string getTime_string();
 
