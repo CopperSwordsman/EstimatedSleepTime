@@ -34,7 +34,7 @@ double compiler::calculateSleepQuality(int sleepDuration, int latencyDuration) {
     //calculate durationScore
     return 100.0 * std::pow(durationScore, durationWeight) * std::pow(latencyScore, latencyWeight);
 }
-void compiler::compile(CustomMap& sleepMap) {
+void compiler::compile(CustomMap& sleepMap, Heap& minSleepHeap, Heap& maxSleepHeap) {
     std::ifstream file("sleep_health_dataset.csv");
     if (!file) {
         std::cerr << "Could not open sleep_health_dataset.csv\n";
@@ -64,6 +64,8 @@ void compiler::compile(CustomMap& sleepMap) {
         int durationKey = static_cast<int>(std::lround(sleepHrs*60));
         InfoNode info_node(sleepQuality,sleepDuration,sleepLatency,stressScore,workHours,caffeineMg,screenTime);
         sleepMap[sleepQuality].addNode(info_node);
+        minSleepHeap.push(info_node);
+        maxSleepHeap.push(info_node);
     }
 }
 compiler::compiler() {

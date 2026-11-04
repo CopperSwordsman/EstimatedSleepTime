@@ -8,11 +8,12 @@
 #include <vector>
 #include <utility>
 #include "maps.h"
+#include "Heap.h"
 
 class compiler {
 public:
     compiler();
-    void compile(CustomMap& sleepMap);
+    void compile(CustomMap& sleepMap, Heap& minSleepHeap, Heap& maxSleepHeap);
     double calculateSleepQuality(int sleepDuration, int latencyDuration);
     double calculateLatencyScore(int latencyDuration);
     double calculateSleepDurationScore(int sleepDuration);
