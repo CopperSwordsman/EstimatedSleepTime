@@ -5,16 +5,10 @@
 #include "Heap.h"
 #include <iostream>
 
-Heap::Heap(const std::function<bool(const InfoNode *, const InfoNode *)>& compare) : compare(compare) {}
+Heap::Heap(const std::function<bool(const InfoNode&, const InfoNode&)>& compare) : compare(compare) {}
 
-Heap::~Heap() {
-    for (const auto& node_ptr : heapData) {
-        delete node_ptr;
-    }
-}
-
-void Heap::push(InfoNode* node_ptr) {
-    heapData.push_back(node_ptr);
+void Heap::push(InfoNode node) {
+    heapData.push_back(node);
     siftUp(heapData.size() - 1);
 }
 
@@ -53,25 +47,23 @@ void Heap::siftDown(int index) {
 
 bool Heap::isEmpty() const {return heapData.empty();}
 
-const InfoNode* Heap::top() const {
+const InfoNode& Heap::top() const {
     if (isEmpty()) {
         std::cerr << "Heap is empty" << std::endl;
-        return nullptr;
     }
     return heapData[0];
 }
 
-const InfoNode* Heap::extract() {
+const std::vector<InfoNode>& Heap::getHeapData() const {return heapData;}
+
+InfoNode Heap::extract() {
     if (isEmpty()) {
         std::cerr << "Heap is empty" << std::endl;
-        return nullptr;
     }
 
-    InfoNode* node_ptr = heapData[0];
+    InfoNode node = heapData[0];
     heapData[0] = heapData[heapData.size() - 1];
     heapData.pop_back();
     siftDown(0);
-    return node_ptr;
+    return node;
 }
-
-const std::vector<InfoNode*>& Heap::getHeapData() const {return heapData;}
