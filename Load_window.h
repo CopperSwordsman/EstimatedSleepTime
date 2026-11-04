@@ -39,6 +39,7 @@ struct Button {
     void draw(sf::RenderWindow& window);
 
 };
+
 class Game {
 public:
     Game();
@@ -61,24 +62,48 @@ private:
     static constexpr float WIDTH = 1200.f;
     static constexpr float HEIGHT = 1800.f;
 
+    //TEXT INPUT BOX
+    sf::FloatRect fromBox{{340.f, 1348.f}, {110.f, 60.f}};
+    sf::FloatRect toBox{{520.f,1348.f}, {110.f,60.f}};
+    std::string fromText;
+    std::string toText;
+    int focusedBox;
+    bool hasRange;
+    int rangeLow=0;
+    int rangeHigh=0;
+    int rangeCount=0;
+    double rangeMs=0.0;
+    std::vector<float> rangeAverages;
+    std::string rangeError;
+    std::string& focusedText();
+    void typeDigit(char32_t c);
+    void rangeKey(sf::Keyboard::Key key);
+    void applyRange();
+    void drawInputBox(sf::FloatRect box, const std::string& text, bool focused);
+   void drawRangePanel();
+
+
+
+
+
     //HOVER TEXT BOX
     int hoverLine=-1;
     int hoverDot=-1;
     sf::Vector2f hoverPos;
-    sf::Texture tooltipTex{"assests/Info_square.png"};
+    sf::Texture tooltipTex{"assets/Info_square.png    "};
     std::string formatValue(float v)const;
     void drawTooltip();
     //CHIPS
     sf::Texture chipTex[4]=
         {
-        sf::Texture("assests/stress_chip.png"),
-        sf::Texture("assests/caffeine_chip.png"),
-        sf::Texture("assests/Screen_time_chip.png"),
-        sf::Texture("assests/work_chip.png")
+        sf::Texture("assets/stress_chip.png"),
+        sf::Texture("assets/caffeine_chip.png"),
+        sf::Texture("assets/Screen_time_chip.png"),
+        sf::Texture("assets/work_chip.png")
     };
     void drawChips();
 
-    sf::Texture chipGlowTex{"assests/chip_glow.png"};
+    sf::Texture chipGlowTex{"assets/chip_glow.png"};
     std::vector<Button> chips;
 
     //Graph
@@ -137,7 +162,7 @@ private:
 
 
 
-    sf::Font font{"assests/Montserrat-Light.ttf"};
+    sf::Font font{"assets/Montserrat-Light.ttf"};
     sf:: Text clockText{font,"", 160};
     std:: string getTime_string();
 

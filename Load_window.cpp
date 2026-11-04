@@ -50,26 +50,26 @@ void Button::draw(sf::RenderWindow &window)
 
 Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State:: Windowed, makeSettings()), box({100.f,100.f})
              ,
-              bgTexture("assests/menu_back.png"),bgSprite(bgTexture),
-            Sleep_trend_texture("assests/sleep_trend_screen.png"),Sleep_trend_Sprite(Sleep_trend_texture),
+              bgTexture("assets/menu_back.png"),bgSprite(bgTexture),
+            Sleep_trend_texture("assets/sleep_trend_screen.png"),Sleep_trend_Sprite(Sleep_trend_texture),
 
-              star1("assests/star1.png"),star1_sprite_(star1),
-              star2("assests/star2.png"),star2_sprite_(star2) ,
-              star3("assests/star3.png"),star3_sprite_(star3) ,
-              star4("assests/star4.png"),star4_sprite_(star4),
-              z1("assests/z1.png"), z1_sprite((z1)),
-              z2("assests/z2.png"), z2_sprite((z2)),
-              z3("assests/z3.png"), z3_sprite((z3)),
+              star1("assets/star1.png"),star1_sprite_(star1),
+              star2("assets/star2.png"),star2_sprite_(star2) ,
+              star3("assets/star3.png"),star3_sprite_(star3) ,
+              star4("assets/star4.png"),star4_sprite_(star4),
+              z1("assets/z1.png"), z1_sprite((z1)),
+              z2("assets/z2.png"), z2_sprite((z2)),
+              z3("assets/z3.png"), z3_sprite((z3)),
 
 
-              sleep_trend_button("assests/sleep_trend_button.png"), sleep_trend_sprite((sleep_trend_button)),
-              sleep_trend_glow("assests/sleep_trend_glow.png"), sleep_glow_sprite((sleep_trend_glow)),
-              heap_button("assests/Heap_button.png"), heap_sprite((heap_button)),
-              heap_glow("assests/Heap_glow.png"), heap_glow_sprite((heap_glow)),
+              sleep_trend_button("assets/sleep_trend_button.png"), sleep_trend_sprite((sleep_trend_button)),
+              sleep_trend_glow("assets/sleep_trend_glow.png"), sleep_glow_sprite((sleep_trend_glow)),
+              heap_button("assets/Heap_button.png"), heap_sprite((heap_button)),
+              heap_glow("assets/Heap_glow.png"), heap_glow_sprite((heap_glow)),
 
                 heap_vs_button(heap_button,heap_glow, {185.f,1400.f}, {174.f,1382.f}),
                 sleep_trend_but(sleep_trend_button, sleep_trend_glow,{185.f,1200.f},{174.f,1182.f} ),
-                dot_glow("assests/dot_glow.png")
+                dot_glow("assets/dot_glow.png")
 
 {
     clockText.setFillColor(sf::Color(255,240,240));
@@ -285,7 +285,7 @@ void Game:: drawTooltip()
     Vector2f tipPos((hoverPos.x - tipSize.x)/2.f,hoverPos.y-tipSize.y - 30.f);
 
     float left= plotArea.position.x;
-    float right=plotArea.position.y+plotArea.size.x;
+    float right= plotArea.position.x + plotArea.size.x;
 
     if (tipPos.x <left)
         tipPos.x= left;
@@ -311,7 +311,169 @@ void Game:: drawTooltip()
 
 
 }
+//TYPING IN BOX HELPERS
+string& Game:: focusedText()
+{
+    if (focusedBox==1)
+        return fromText;
+    return toText;
+}
+void Game::typeDigit(char32_t c)
+{
+    if (focusedBox==0)
+    {
+      return;
+    }
+    if (c<U'0' || c> U'9')
+        return;
 
+    string& text=focusedText();
+
+    if (text.size()<3)
+        text += static_cast<char>(c);
+}
+
+void Game:: rangeKey(Keyboard::Key key)
+{
+    if (focusedBox==0)
+        return;
+
+    if (key==Keyboard::Key::Backspace)
+    {
+       string& text= focusedText();
+
+        if (!text.empty())
+            text.pop_back();
+    }
+    else if (key==Keyboard::Key::Tab)
+    {
+        if (focusedBox==1)
+            focusedBox=2;
+
+        if (focusedBox==2)
+            focusedBox=1;
+    }
+    else if (key==Keyboard::Key::Enter)
+    {
+        applyRange();
+    }
+
+
+}
+
+void Game::applyRange() {
+    rangeError = "";
+    hasRange=false;
+    if (fromText.empty()|| toText.empty())
+    {
+        rangeError = "Type a number in both boxes";
+        return;
+    }
+    int low=stoi(fromText);
+    int high= stoi(toText);
+    if (low>100 || high>100)
+    {
+        rangeError = "Sleep quality only goes from 0 to 100";
+        return;
+    }
+    if (low>high)
+        swap(low,high);
+
+
+    auto start= chrono::steady_clock::now();
+
+    rangeAverages.clear();
+    for (const auto& line : lines) {
+        double avg= sleepMap.averageValues(static_cast<int>(line.which),low,high);
+        rangeAverages.push_back(static_cast<float>(avg));
+
+
+    }
+    auto end=chrono::steady_clock::now();
+    rangeMs=chrono::duration<double,milli>(end-start).count();
+
+    rangeCount=0;
+    for (int q=low; q<=high;q++) {
+        rangeCount+= static_cast<int>(sleepMap[q].nodes.size());
+    }
+
+        if (rangeCount == 0)
+        {
+            rangeError="Nodbody in the data has a quality in that range";
+            return;
+        }
+        rangeLow=low;
+        rangeHigh=high;
+        hasRange=true;
+        focusedBox=0;
+    }
+
+void Game::drawInputBox(FloatRect box, const string & text, bool focused)
+{
+  string shown= text;
+    if (focused && fmod(life_time,1.f)<0.5f)
+        shown+= "|";
+
+    Text t(font, shown, 32);
+
+    t.setFillColor(sf::Color(255,240,240));
+    FloatRect b= t.getGlobalBounds();
+    t.setOrigin({b.position.x+b.size.x/2.f,b.position.y+b.size.y/2.f});
+
+    t.setPosition({box.position.x+box.size.x/2.f, box.position.y+box.size.y/2.f});
+    window.draw(t);
+}
+
+void Game::drawRangePanel()
+{
+    drawInputBox(fromBox,fromText,focusedBox==1);
+    drawInputBox(toBox,toText,focusedBox==2);
+
+    if (rangeError != "")
+    {
+        Text err(font, rangeError,26);
+
+        err.setFillColor(sf::Color(255,143,163));
+        window.draw(err);
+        return;
+    }
+    if (!hasRange)
+    {
+        Text hint(font, "Click a box, type 0 to 100,Tab to switch, Enter to search", 24);
+        hint.setFillColor(sf::Color(255,240,240,140));
+        hint.setPosition({130.f,1470.f});
+
+        window.draw(hint);
+        return;
+
+    }
+    char buffer[96];
+    snprintf(buffer, sizeof(buffer), "Quality %d to %d:  %d nights,  map took %.2f ms", rangeLow, rangeHigh, rangeCount, rangeMs);
+    Text summary(font, buffer, 26);
+
+    summary.setPosition({130.f,1470.f});
+    window.draw(summary);
+
+    for (int i=0; i< (int)lines.size(); i++)
+    {
+        float x = 130.f + (i%2)* 480.f;
+
+        float y = 1550.f + (i/2) *80.f;
+
+        CircleShape dot(8);
+        dot.setOrigin({8, 8});
+        dot.setPosition({x + 8.f, y + 18.f});
+        dot.setFillColor(lines[i].color);
+        window.draw(dot);
+
+        string row = lines[i].name + ":  " + formatValue(rangeAverages[i]) + " " + lines[i].unit;
+        Text t(font,row,30);
+        t.setFillColor(sf::Color(255,240,240));
+        t.setPosition({x+30.f,y});
+        window.draw(t);
+
+    }
+}
 
 string Game::getTime_string()
 {
@@ -364,11 +526,11 @@ void Game::processEvents()
 
                     cout<<"SLEEP TREND BUTTON WORKS"<<endl;
 
-                    for (int i=0; i< (int)chips.size(); i++)
-                    {
-                        if (chips[i].area.contains(p))
-                            lines[i].visible = !lines[i].visible;
-                    }
+                    // for (int i=0; i< (int)chips.size(); i++)
+                    // {
+                    //     if (chips[i].area.contains(p))
+                    //         lines[i].visible = !lines[i].visible;
+                    // }
 
 
                 }
@@ -381,6 +543,12 @@ void Game::processEvents()
             }
             else if (screen==Screen::Sleep_Trends)
             {
+                if (fromBox.contains(p))
+                    focusedBox=1;
+                else if (toBox.contains(p))
+                    focusedBox=2;
+                else
+                    focusedBox=0;
                for (int i=0; i<(int)chips.size();i++)
                {
                    if (chips[i].area.contains(p))
@@ -389,6 +557,16 @@ void Game::processEvents()
                    }
                }
             }
+        }
+        else if (const auto* t=event->getIf<Event::TextEntered>())
+        {
+            if (screen== Screen::Sleep_Trends)
+                typeDigit(t->unicode);
+        }
+        else if(const auto* k =event->getIf<Event::KeyPressed>())
+        {
+            if (screen==Screen::Sleep_Trends)
+                rangeKey(k->code);
         }
     }
 }
@@ -451,6 +629,7 @@ void Game::renderSleepTrends()
 
     }
     drawChips();
+    drawRangePanel();
     drawTooltip();
 
 
