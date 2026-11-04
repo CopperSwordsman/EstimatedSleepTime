@@ -22,6 +22,6 @@ public:
     const InfoNode& top() const;
     const std::vector<InfoNode>& getHeapData() const;
     InfoNode extract();
-    double get_avg_value(int metric, int start, int end) const;
+    double getAvgValue(int metric, int start, int end) const;
 };
 #endif //ESTIMATEDSLEEPTIME_HEAP_H
