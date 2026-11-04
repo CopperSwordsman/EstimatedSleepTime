@@ -48,7 +48,7 @@ void Button::draw(sf::RenderWindow &window)
     window.draw(label);
     }
 
-Game::Game(): window(sf::VideoMode({600,900}),"EST",sf::Style::Default,sf::State:: Windowed, makeSettings()), box({100.f,100.f})
+Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State:: Windowed, makeSettings()), box({100.f,100.f})
              ,
               bgTexture("assests/menu_back.png"),bgSprite(bgTexture),
             Sleep_trend_texture("assests/sleep_trend_screen.png"),Sleep_trend_Sprite(Sleep_trend_texture),
@@ -186,8 +186,10 @@ void Game::drawGraph(int line_index)
     }
 
 
-    for (Vector2f p: points) ///Drawing dots
+    for (int i = 0; i<(int)points.size(); i++) ///Drawing dots
     {
+
+        Vector2f p = points[i];
         Vector2f d= mouse_pos-p;
 
         bool hovered= (d.x* d.x + d.y*d.y)<20.f *20.f;
@@ -207,6 +209,10 @@ void Game::drawGraph(int line_index)
             glowSprite.setPosition(p);
             glowSprite.setColor(line.color);
             window.draw(glowSprite);
+
+            hoverLine=line_index;
+            hoverDot=i;
+            hoverPos=p;
         }
 
     }
@@ -227,6 +233,8 @@ void Game::drawLine(sf::Vector2f a, sf::Vector2f b, float thickness, sf::Color c
 
 
 }
+
+
 
 //GRAPH MAKING END---------------------------------------
 void Game:: drawChips()
@@ -250,6 +258,60 @@ void Game:: drawStar(Sprite& s, float speed, float offset)
     s.setColor(sf::Color(255,255,255,uint8_t(195*t)));
     window.draw(s);
 }
+std::string Game::formatValue(float v) const
+{
+    char buffer[16];
+    snprintf(buffer,sizeof(buffer),"%.1f",v);
+    return buffer;
+}
+void Game:: drawTooltip()
+{
+    if (hoverLine==-1)
+        return;
+    const GraphLine& line = lines[hoverLine];
+
+    string top = line.name+ ": "+ formatValue(line.values[hoverDot])+ " "+line.unit;
+    string bottom= "Quality"+ bucketLabels[hoverDot];
+
+    Text topText(font, top, 30);
+    topText.setFillColor(sf::Color(255,255,255));
+
+    Text bottomText(font, bottom,24);
+    bottomText.setFillColor(sf::Color(255,255,255));
+
+
+    Vector2f tipSize(tooltipTex.getSize());
+
+    Vector2f tipPos((hoverPos.x - tipSize.x)/2.f,hoverPos.y-tipSize.y - 30.f);
+
+    float left= plotArea.position.x;
+    float right=plotArea.position.y+plotArea.size.x;
+
+    if (tipPos.x <left)
+        tipPos.x= left;
+
+    if (tipPos.x+tipSize.x > right)
+        tipPos.x= right- tipSize.x;
+
+    if (tipPos.y<plotArea.position.y)
+        tipPos.y=hoverPos.y+30.f;
+
+
+    Sprite tip(tooltipTex);
+    tip.setPosition(tipPos);
+    tip.setColor(line.color);
+    window.draw(tip);
+
+    topText.setPosition({tipPos.x+20.f, tipPos.y+14.f});
+    bottomText.setPosition({tipPos.x+20.f,tipPos.y+56.f});
+    window.draw(topText);
+    window.draw(bottomText);
+
+
+
+
+}
+
 
 string Game::getTime_string()
 {
@@ -358,10 +420,11 @@ void Game::update(float dt)
 void Game::renderMenu()
 {
     window.draw(bgSprite);
-    drawStar(star1_sprite_,3.f, 0.0f);
-    drawStar(star2_sprite_,3.f, 1.6f);
-    drawStar(star3_sprite_,3.f, 3.1f);
-    drawStar(star4_sprite_,3.f, 4.7f);
+    drawStar(star1_sprite_,3.5f, 0.0f);
+    drawStar(star2_sprite_,3.5f, 1.6f);
+    drawStar(star3_sprite_,3.5f, 3.1f);
+    drawStar(star4_sprite_,3.5f, 4.7f);
+
 
     drawStar(z1_sprite,1.5,16.f);
     drawStar(z2_sprite,1.5,8.f);
@@ -375,12 +438,20 @@ void Game::renderMenu()
 void Game::renderSleepTrends()
 {
 
+
     window.draw(Sleep_trend_Sprite);
+    hoverLine=-1;
+
+    drawStar(star1_sprite_,3.f, 0.0f);
+    drawStar(star2_sprite_,3.f, 1.6f);
+    drawStar(star3_sprite_,3.f, 3.1f);
+
     for (int i=0; i<(int)lines.size(); i++) {
         drawGraph(i);
 
     }
     drawChips();
+    drawTooltip();
 
 
 

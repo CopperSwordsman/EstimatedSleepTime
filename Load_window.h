@@ -57,6 +57,14 @@ private:
     void updateView();
     static constexpr float WIDTH = 1200.f;
     static constexpr float HEIGHT = 1800.f;
+
+    //HOVER TEXT BOX
+    int hoverLine=-1;
+    int hoverDot=-1;
+    sf::Vector2f hoverPos;
+    sf::Texture tooltipTex{"assests/Info_square.png"};
+    std::string formatValue(float v)const;
+    void drawTooltip();
     //CHIPS
     sf::Texture chipTex[4]=
         {
