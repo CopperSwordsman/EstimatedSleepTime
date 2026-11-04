@@ -22,14 +22,12 @@ add_executable(EstimatedSleep
         Load_window.cpp
         compile.cpp
         handling.cpp
-        Load_window.cpp
-        Load_window.cpp
-        maps.h
+        compile.cpp
         maps.cpp
-        infonode.h
+        maps.h
         infonode.cpp
-        maps.cpp)
-target_link_libraries(EstimatedSleep PRIVATE SFML::Graphics)
-
-configure_file(${CMAKE_SOURCE_DIR}/sleep_health_dataset.csv
-        ${CMAKE_BINARY_DIR}/sleep_health_dataset.csv COPYONLY)
+        infonode.h
+        Heap.cpp
+        Heap.h
+)
+configure_file(${CMAKE_SOURCE_DIR}/sleep_health_dataset.csv ${CMAKE_BINARY_DIR}/sleep_health_dataset.csv COPYONLY)
