@@ -1,7 +1,23 @@
 #include <SFML/Graphics.hpp>
 #pragma once
 #include <string>
+#include<vector>
 #include <cmath>
+#include "maps.h"
+#include "compile.h"
+#include "infonode.h"
+
+
+
+struct GraphLine {
+    std::string name;
+    std::string unit;
+    InfoNodeType which;
+    sf::Color color;
+    std::vector<float> values;
+    bool visible = true;
+};
+
 
 struct Button {
     sf::Sprite label;
@@ -22,6 +38,10 @@ public:
     Game();
     void run();
 private:
+    CustomMap sleepMap;
+    std:: vector<GraphLine> lines;
+    std::vector<std::string> bucketLabels;
+    void load_map_data();
     enum class Screen {menu, Sleep_Trends, Heap_vs_Map};
     Screen screen=Screen::menu;
     void renderMenu();
@@ -32,6 +52,11 @@ private:
     void updateView();
     static constexpr float WIDTH = 1200.f;
     static constexpr float HEIGHT = 1800.f;
+    //Graph
+    sf::FloatRect plotArea{{120.f, 447.f},{950.f,615.f}};
+    float xForBuckect(int i) const;
+    float yForValue(float val, float min_val,float max_val)const;
+    void drawGraph();
 
     sf::RenderWindow window;
     sf::RectangleShape box;

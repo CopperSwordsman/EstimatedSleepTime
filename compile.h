@@ -7,23 +7,14 @@
 #include <map>
 #include <vector>
 #include <utility>
-#include <string>
+#include "maps.h"
 
-class mapCompiler {
-
-    std::map<int, std::vector<std::pair<double, double>>> timeToSleepMap;
-    //first is going to be stressScore, second will be workHours.
-    std::map<int, std::vector<std::pair<double,double>>> sleepDurationMap;
+class compiler {
 public:
-    mapCompiler();
-    void compile();
-    void iterate(int key) const;
-    std::pair<double,double> averageDurationRange(int start, int end);
-    std::pair<double,double> averageLatencyRange(int start, int end);
-};
-class heapCompiler {
-public:
-    heapCompiler();
-    void compile();
+    compiler();
+    void compile(CustomMap& sleepMap);
+    double calculateSleepQuality(int sleepDuration, int latencyDuration);
+    double calculateLatencyScore(int latencyDuration);
+    double calculateSleepDurationScore(int sleepDuration);
 };
 #endif //ESTIMATEDSLEEPTIME_COMPILE_H
