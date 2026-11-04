@@ -67,3 +67,69 @@ InfoNode Heap::extract() {
     siftDown(0);
     return node;
 }
+
+double Heap::get_avg_value(int metric, int start, int end) const {
+    int size = 0;
+
+    if (metric == static_cast<int>(InfoNodeType::sleepDuration)) {
+        double duration_total = 0.00;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                duration_total += node.sleepDuration;
+                size++;
+            }
+        }
+        return duration_total / size;
+    }
+    if (metric == static_cast<int>(InfoNodeType::sleepLatency)) {
+        double latency_total = 0.00;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                latency_total += node.sleepLatency;
+                size++;
+            }
+        }
+        return latency_total / size;
+    }
+    if (metric == static_cast<int>(InfoNodeType::stressScore)) {
+        double stress_total = 0.00;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                stress_total += node.stressScore;
+                size++;
+            }
+        }
+        return stress_total / size;
+    }
+    if (metric == static_cast<int>(InfoNodeType::workHours)) {
+        double work_total = 0.00;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                work_total += node.workHours;
+                size++;
+            }
+        }
+        return work_total / size;
+    }
+    if (metric == static_cast<int>(InfoNodeType::caffeineMg)) {
+        double caffeine_total = 0.00;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                caffeine_total += node.caffeineMg;
+                size++;
+            }
+        }
+        return caffeine_total / size;
+    }
+    if (metric == static_cast<int>(InfoNodeType::screenTime)) {
+        double screen_total = 0;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                screen_total += node.screenTime;
+                size++;
+            }
+        }
+        return screen_total / size;
+    }
+    return -1;
+}
