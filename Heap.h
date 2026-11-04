@@ -10,19 +10,17 @@
 
 class Heap {
 private:
-    std::function<bool(const InfoNode*, const InfoNode*)> compare; // comparator for min/max heap
-    std::vector<InfoNode*> heapData;
+    std::function<bool(const InfoNode&, const InfoNode&)> compare; // comparator for min/max heap
+    std::vector<InfoNode> heapData;
 public:
-    explicit Heap(const std::function<bool(const InfoNode*, const InfoNode*)>& compare);
-    Heap(const Heap&) = delete; // don't use copy constructor
-    Heap& operator=(const Heap&) = delete; // don't use copy assignment operator
-    ~Heap();
-    void push(InfoNode* node_ptr);
+    explicit Heap(const std::function<bool(const InfoNode&, const InfoNode&)>& compare);
+    void push(InfoNode node);
     void siftUp(int index);
     void siftDown(int index);
     bool isEmpty() const;
-    const InfoNode* top() const;
-    const InfoNode* extract();
-    const std::vector<InfoNode*>& getHeapData() const;
+    const InfoNode& top() const;
+    const std::vector<InfoNode>& getHeapData() const;
+    InfoNode extract();
+
 };
 #endif //ESTIMATEDSLEEPTIME_HEAP_H
