@@ -79,8 +79,6 @@ Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State
 
     updateView();
     compiler c;
-    Heap minHeap([](const InfoNode &a, const InfoNode &b) { return a.sleepQuality < b.sleepQuality; });
-    Heap maxHeap([](const InfoNode &a, const InfoNode &b) { return a.sleepQuality < b.sleepQuality; });
     c.compile(sleepMap, minHeap, maxHeap);
 
     lines=

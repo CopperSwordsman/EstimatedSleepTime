@@ -45,8 +45,8 @@ public:
     void run();
 private:
     CustomMap sleepMap;
-    Heap maxHeap;
-    Heap minHeap;
+    Heap maxHeap{[](const InfoNode &a, const InfoNode &b) {return a.sleepQuality < b.sleepQuality;}};
+    Heap minHeap{[](const InfoNode &a, const InfoNode &b) {return a.sleepQuality < b.sleepQuality;}};
     std:: vector<GraphLine> lines;
     std::vector<std::string> bucketLabels;
     void load_map_data();
