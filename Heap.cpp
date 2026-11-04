@@ -68,7 +68,7 @@ InfoNode Heap::extract() {
     return node;
 }
 
-double Heap::get_avg_value(int metric, int start, int end) const {
+double Heap::getAvgValue(int metric, int start, int end) const {
     int size = 0;
 
     if (metric == static_cast<int>(InfoNodeType::sleepDuration)) {

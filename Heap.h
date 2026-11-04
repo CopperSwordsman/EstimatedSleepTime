@@ -13,7 +13,6 @@ private:
     std::function<bool(const InfoNode&, const InfoNode&)> compare; // comparator for min/max heap
     std::vector<InfoNode> heapData;
 public:
-    Heap() = default;
     explicit Heap(const std::function<bool(const InfoNode&, const InfoNode&)>& compare);
     void push(InfoNode node);
     void siftUp(int index);
@@ -22,6 +21,6 @@ public:
     const InfoNode& top() const;
     const std::vector<InfoNode>& getHeapData() const;
     InfoNode extract();
-    double get_avg_value(int metric, int start, int end) const;
+    double getAvgValue(int metric, int start, int end) const;
 };
 #endif //ESTIMATEDSLEEPTIME_HEAP_H
