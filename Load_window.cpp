@@ -271,7 +271,7 @@ void Game:: drawTooltip()
     const GraphLine& line = lines[hoverLine];
 
     string top = line.name+ ": "+ formatValue(line.values[hoverDot])+ " "+line.unit;
-    string bottom= "Quality"+ bucketLabels[hoverDot];
+    string bottom= "Quality "+ bucketLabels[hoverDot];
 
     Text topText(font, top, 30);
     topText.setFillColor(sf::Color(255,255,255));
