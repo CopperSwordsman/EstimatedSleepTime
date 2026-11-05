@@ -33,4 +33,12 @@ add_executable(EstimatedSleep
 
 )
 target_link_libraries(EstimatedSleep PRIVATE SFML::Graphics)
-configure_file(${CMAKE_SOURCE_DIR}/sleep_health_dataset.csv ${CMAKE_BINARY_DIR}/sleep_health_dataset.csv COPYONLY)
+
+# Copy assets and dataset next to the executable after every build
+add_custom_command(TARGET EstimatedSleep POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:EstimatedSleep>/assets
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/sleep_health_dataset.csv
+        $<TARGET_FILE_DIR:EstimatedSleep>/sleep_health_dataset.csv)

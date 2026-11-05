@@ -180,15 +180,6 @@ void Game::load_map_data()
 
         }
     }
-    for (const auto& line: lines) {
-        cout<<line.name<<": ";
-        for (float v : line.values)
-        {
-            cout<<v<<" ";
-
-        }
-        cout<<" "<<endl;
-    }
 
 }
 //GRAPH MAKING START------------------------------
@@ -485,7 +476,12 @@ void Game::applyRange() {
 
 
     auto start= chrono::steady_clock::now();
-
+    const char* who;
+    if (mode == DataMode::Heap)
+        who= "heap";
+    else
+        who="map";
+    lastWho = who;
     rangeAverages.clear();
     for (const auto& line : lines) {
         double avg;
@@ -564,7 +560,7 @@ void Game::drawRangePanel()
     else
         who="map";
     snprintf(buffer, sizeof(buffer), "Quality %d to %d:  %d nights,  %s took %.2f ms",
-             rangeLow, rangeHigh, rangeCount, who, rangeMs);
+             rangeLow, rangeHigh, rangeCount, lastWho, rangeMs);
     Text summary(font, buffer, 26);
 
     summary.setPosition({130.f,1470.f});
@@ -640,7 +636,6 @@ void Game::processEvents()
                 {
                     screen=Screen::Sleep_Trends;
 
-                    cout<<"SLEEP TREND BUTTON WORKS"<<endl;
 
                     // for (int i=0; i< (int)chips.size(); i++)
                     // {
@@ -654,7 +649,6 @@ void Game::processEvents()
                 if(heap_vs_button.area.contains(p))
                 {
                     screen=Screen::Heap_vs_Map;
-                    cout<<"HEAP BUTTON WORKS"<<endl;
                 }
             }
             else if (screen==Screen::Sleep_Trends)

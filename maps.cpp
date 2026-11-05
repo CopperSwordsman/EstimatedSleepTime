@@ -20,14 +20,14 @@ double RBNode::totalAmount(int which) {
         for (int i = 0; i<size;i++) {
             durationTotal += nodes[i].sleepDuration;
         }
-        return static_cast<int>(durationTotal);
+        return durationTotal;
     }
     if (which == static_cast<int>(InfoNodeType::sleepLatency)) {
         int latencyTotal = 0;
         for (int i = 0; i<size;i++) {
             latencyTotal+= nodes[i].sleepLatency;
         }
-        return static_cast<int>(latencyTotal);
+        return latencyTotal;
     }
     if (which == static_cast<int>(InfoNodeType::stressScore)) {
         double stressTotal = 0;
@@ -57,6 +57,7 @@ double RBNode::totalAmount(int which) {
         }
         return screenTotal;
     }
+    return 0;
 }
 double RBNode::averageValue(int which) {
     double size = static_cast<int>(nodes.size());

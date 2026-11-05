@@ -83,6 +83,7 @@ private:
     std::string toText;
     int focusedBox;
     bool hasRange;
+    const char* lastWho = "heap";
     int rangeLow=0;
     int rangeHigh=0;
     int rangeCount=0;
