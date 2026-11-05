@@ -68,7 +68,7 @@ Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State
               heap_glow("assets/Heap_glow.png"), heap_glow_sprite((heap_glow)),
 
                 heap_vs_button(heap_button,heap_glow, {185.f,1400.f}, {174.f,1382.f}),
-                sleep_trend_but(sleep_trend_button, sleep_trend_glow,{185.f,1200.f},{174.f,1182.f} ),
+                sleep_trend_but(sleep_trend_button, sleep_trend_glow,{185.f,1300.f},{174.f,1282.f} ),
                 dot_glow("assets/dot_glow.png")
 
 {
@@ -89,7 +89,7 @@ Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State
         {"Work",  "hrs", InfoNodeType:: workHours, sf::Color(142,227,161)}
 
     };
-    load_map_data();
+    load_data();
     for (int i=0; i<4; i++) //positiong chips
     {
         Vector2f pos(120.f+i * 243.f, 1205.f);
@@ -97,6 +97,57 @@ Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State
 
     }
 }
+
+void Game::load_heap_data()
+{
+
+    for (auto& line: lines)
+    {
+        line.values.clear();
+    }
+
+    for (int start=0; start<=90; start+=10)
+    {
+        int end;
+        if (start ==90)
+            end=100;
+        else
+            end=start+9;
+
+        for (auto& line : lines)
+        {
+            double avg= maxHeap.getAvgValue(static_cast<int>(line.which),start,end);
+
+            if (line.which == InfoNodeType::sleepDuration)
+            {
+                avg /= 60;
+
+            }
+            line.values.push_back(static_cast<float>(avg));
+
+        }
+    }
+
+
+
+}
+
+void Game:: load_data()
+{
+  auto start= chrono::steady_clock::now();
+
+    if (mode== DataMode::Map)
+        {
+        load_map_data();
+    }
+    else
+        load_heap_data();
+
+    auto end=chrono::steady_clock::now();
+    loadMs= chrono::duration<double, milli>(end - start).count();
+}
+
+
 
 void Game::load_map_data()
 {
@@ -156,6 +207,59 @@ float Game::yForValue(float val, float min_val, float max_val) const
     float t = (val-min_val)/(max_val-min_val);
     float bottom = plotArea.position.y + plotArea.size.y-pad;
     return bottom-t * usable;
+}
+void Game:: drawPillLabel(const string & text, FloatRect half, bool selected)
+{
+   Text label(font, text, 30);
+    FloatRect b = label.getLocalBounds();
+    label.setOrigin({b.position.x+b.size.x/2.f, b.position.y+b.size.y/ 2.f});
+    label.setPosition({half.position.x+ half.size.x/ 2.f, half.position.y+half.size.y/ 2.f});
+
+    if (selected)
+        label.setFillColor(sf::Color(255,240,240));
+    else
+    {
+        label.setFillColor(sf::Color(255,240,110));
+
+    }
+    window.draw(label);
+
+}
+
+void Game::drawModeSwitch()
+{
+    bool heapOn= (mode==DataMode::Heap);
+
+    FloatRect selectedHalf;
+    if (heapOn)
+        selectedHalf=heapHalf;
+    else
+        selectedHalf=mapHalf;
+
+    Sprite select(pillSelectTex);
+    select.setPosition({selectedHalf.position.x+4.f, selectedHalf.position.y+4.f});
+
+    select.setColor(sf::Color(255,255,255,90));
+    window.draw(select);
+
+    drawPillLabel("Heap", heapHalf,heapOn);
+    drawPillLabel("Map",mapHalf, !heapOn);
+
+    char buffer[48];
+    if (heapOn)
+        snprintf(buffer,sizeof(buffer),"Heap: averages in %.2f ms", loadMs);
+    else
+        snprintf(buffer,sizeof(buffer), "Map: averages in %.2f ms",loadMs);
+
+    Text timing(font,buffer, 24);
+    FloatRect b= timing.getLocalBounds();
+    timing.setOrigin({b.position.x+b.size.x/ 2.f, b.position.y});
+    timing.setPosition({600.f, 400.f});
+    timing.setFillColor(sf::Color(255,240,240,190));
+    window.draw(timing);
+
+
+
 }
 
 void Game::drawGraph(int line_index)
@@ -282,7 +386,7 @@ void Game:: drawTooltip()
 
     Vector2f tipSize(tooltipTex.getSize());
 
-    Vector2f tipPos((hoverPos.x - tipSize.x)/2.f,hoverPos.y-tipSize.y - 30.f);
+    Vector2f tipPos(hoverPos.x - tipSize.x/2.f,hoverPos.y-tipSize.y - 30.f);
 
     float left= plotArea.position.x;
     float right= plotArea.position.x + plotArea.size.x;
@@ -384,7 +488,13 @@ void Game::applyRange() {
 
     rangeAverages.clear();
     for (const auto& line : lines) {
-        double avg= sleepMap.averageValues(static_cast<int>(line.which),low,high);
+        double avg;
+        if (mode== DataMode::Heap)
+            avg=maxHeap.getAvgValue(static_cast<int>(line.which),low,high);
+        else {
+            avg =sleepMap.averageValues(static_cast<int>(line.which),low,high);
+
+        }
         rangeAverages.push_back(static_cast<float>(avg));
 
 
@@ -448,7 +558,13 @@ void Game::drawRangePanel()
 
     }
     char buffer[96];
-    snprintf(buffer, sizeof(buffer), "Quality %d to %d:  %d nights,  map took %.2f ms", rangeLow, rangeHigh, rangeCount, rangeMs);
+    const char* who;
+    if (mode == DataMode::Heap)
+        who= "heap";
+    else
+        who="map";
+    snprintf(buffer, sizeof(buffer), "Quality %d to %d:  %d nights,  %s took %.2f ms",
+             rangeLow, rangeHigh, rangeCount, who, rangeMs);
     Text summary(font, buffer, 26);
 
     summary.setPosition({130.f,1470.f});
@@ -556,16 +672,29 @@ void Game::processEvents()
                        lines[i].visible= !lines[i].visible;
                    }
                }
+                if (heapHalf.contains(p) && mode!= DataMode::Heap)
+                    {
+                    mode=DataMode::Heap;
+                    load_data();
+                }
+                else if (mapHalf.contains(p) && mode != DataMode::Map) {
+                    mode= DataMode::Map;
+                    load_data();
+                }
             }
         }
+
         else if (const auto* t=event->getIf<Event::TextEntered>())
         {
             if (screen== Screen::Sleep_Trends)
                 typeDigit(t->unicode);
         }
-        else if(const auto* k =event->getIf<Event::KeyPressed>())
-        {
-            if (screen==Screen::Sleep_Trends)
+        else if(const auto* k =event->getIf<Event::KeyPressed>()) {
+            if (k->code == Keyboard::Key::Escape) {
+                screen = Screen::menu;
+                focusedBox = 0;
+            }
+            else
                 rangeKey(k->code);
         }
     }
@@ -610,7 +739,6 @@ void Game::renderMenu()
 
     window.draw(clockText);
 
-    heap_vs_button.draw(window);
     sleep_trend_but.draw(window);
 }
 void Game::renderSleepTrends()
@@ -618,6 +746,7 @@ void Game::renderSleepTrends()
 
 
     window.draw(Sleep_trend_Sprite);
+    drawModeSwitch();
     hoverLine=-1;
 
     drawStar(star1_sprite_,3.f, 0.0f);

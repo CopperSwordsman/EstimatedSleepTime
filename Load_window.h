@@ -61,6 +61,20 @@ private:
     void updateView();
     static constexpr float WIDTH = 1200.f;
     static constexpr float HEIGHT = 1800.f;
+    //HEAP MAP
+    enum class DataMode{Map, Heap};
+    DataMode mode = DataMode::Map;
+    double loadMs = 0.0;
+    sf::FloatRect mapHalf{{600.f,312.f}, {210.f,72.f}};
+    sf::FloatRect heapHalf{{390.f,312.f}, {210.f,72.f}};
+    sf:: Texture pillSelectTex{"assets/map_heap_chip.png"};
+    void load_heap_data();
+    void load_data();
+    void drawModeSwitch();
+    void drawPillLabel(const std:: string& text, sf::FloatRect half, bool selected);
+
+
+
 
     //TEXT INPUT BOX
     sf::FloatRect fromBox{{340.f, 1348.f}, {110.f, 60.f}};
