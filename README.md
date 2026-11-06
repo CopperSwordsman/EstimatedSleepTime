@@ -1,3 +1,17 @@
+## Requirements:
+1. C++ 17
+2. Install SFML via https://www.sfml-dev.org/download/
+3. Git (optional)
+
+## How to get EST:
+2 Ways:
+1. Run the following in your terminal:
+````bash
+git clone https://github.com/CopperSwordsman/EstimatedSleepTime.git
+````
+2. Download the ZIP file, extract it, and open it with an IDE.
+
+## How to use EST:
 1.  Run the code
 2.  Click sleep trends
 3.  A graph will load, you can switch between heap and map mode at the bottom, the time to load these functions is represented right below the switcher.
