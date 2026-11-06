@@ -46,7 +46,7 @@ public:
     void run();
 private:
     CustomMap sleepMap;
-    Heap maxHeap{[](const InfoNode &a, const InfoNode &b) {return a.sleepQuality < b.sleepQuality;}};
+    Heap maxHeap{[](const InfoNode &a, const InfoNode &b) {return a.sleepQuality > b.sleepQuality;}};
     Heap minHeap{[](const InfoNode &a, const InfoNode &b) {return a.sleepQuality < b.sleepQuality;}};
     std:: vector<GraphLine> lines;
     std::vector<std::string> bucketLabels;
@@ -81,8 +81,8 @@ private:
     sf::FloatRect toBox{{520.f,1348.f}, {110.f,60.f}};
     std::string fromText;
     std::string toText;
-    int focusedBox;
-    bool hasRange;
+    int focusedBox = 0;
+    bool hasRange = false;
     const char* lastWho = "heap";
     int rangeLow=0;
     int rangeHigh=0;
@@ -105,7 +105,7 @@ private:
     int hoverLine=-1;
     int hoverDot=-1;
     sf::Vector2f hoverPos;
-    sf::Texture tooltipTex{"assets/Info_square.png    "};
+    sf::Texture tooltipTex{"assets/Info_square.png"};
     std::string formatValue(float v)const;
     void drawTooltip();
     //CHIPS

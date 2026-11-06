@@ -84,7 +84,7 @@ Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State
     lines=
     {
         {"Stress",  "/10", InfoNodeType:: stressScore, sf::Color(255,143,163)},
-        {"Cafeine",  "mg", InfoNodeType:: caffeineMg, sf::Color(255,200,112)},
+        {"Caffeine",  "mg", InfoNodeType:: caffeineMg, sf::Color(255,200,112)},
         {"Screen time",  "min", InfoNodeType:: screenTime, sf::Color(111,227,230)},
         {"Work",  "hrs", InfoNodeType:: workHours, sf::Color(142,227,161)}
 
@@ -440,14 +440,14 @@ void Game:: rangeKey(Keyboard::Key key)
         if (!text.empty())
             text.pop_back();
     }
-    else if (key==Keyboard::Key::Tab)
+    /*else if (key==Keyboard::Key::Tab)
     {
         if (focusedBox==1)
             focusedBox=2;
 
         if (focusedBox==2)
             focusedBox=1;
-    }
+    }*/
     else if (key==Keyboard::Key::Enter)
     {
         applyRange();
@@ -545,7 +545,7 @@ void Game::drawRangePanel()
     }
     if (!hasRange)
     {
-        Text hint(font, "Click a box, type 0 to 100,Tab to switch, Enter to search", 24);
+        Text hint(font, "Click a box, type 0 to 100, Enter to search", 24);
         hint.setFillColor(sf::Color(255,240,240,140));
         hint.setPosition({130.f,1470.f});
 
