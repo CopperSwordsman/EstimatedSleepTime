@@ -22,7 +22,6 @@ add_executable(EstimatedSleep
         main.cpp
         Load_window.cpp
         compile.h
-        handling.cpp
         compile.cpp
         maps.cpp
         maps.h
