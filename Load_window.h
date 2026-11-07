@@ -8,12 +8,13 @@
 #include "infonode.h"
 #include "Heap.h"
 
-
+//anti alliasing
 static sf::ContextSettings makeSettings() {
     sf::ContextSettings s;
     s.antiAliasingLevel=8;
     return s;
 }
+//graph line
 struct GraphLine {
     std::string name;
     std::string unit;
@@ -24,7 +25,7 @@ struct GraphLine {
 };
 
 
-
+//button class
 struct Button {
     sf::Sprite label;
     sf::Sprite glow;
@@ -45,6 +46,8 @@ public:
     Game();
     void run();
 private:
+
+
     CustomMap sleepMap;
     Heap maxHeap{[](const InfoNode &a, const InfoNode &b) {return a.sleepQuality > b.sleepQuality;}};
     Heap minHeap{[](const InfoNode &a, const InfoNode &b) {return a.sleepQuality < b.sleepQuality;}};
@@ -61,6 +64,7 @@ private:
     void updateView();
     static constexpr float WIDTH = 1200.f;
     static constexpr float HEIGHT = 1800.f;
+
     //HEAP MAP
     enum class DataMode{Map, Heap};
     DataMode mode = DataMode::Map;
@@ -165,18 +169,13 @@ private:
     sf::Texture heap_glow;
     sf::Sprite heap_glow_sprite;
 
-    Button heap_vs_button;
     Button sleep_trend_but;
 
-    //Button template
-    // sf::FloatRect Sleep_button_area{{185.f,1200.f}, {816.f,128.f}};
-    // sf::FloatRect heap_button_area{{185.f,1400.f}, {816.f,128.f}};
 
 
 
 
-
-
+//Font
     sf::Font font{"assets/Montserrat-Light.ttf"};
     sf:: Text clockText{font,"", 160};
     std:: string getTime_string();

@@ -8,7 +8,7 @@ using namespace sf;
 
 
 
-
+//button constructor
 Button::Button(const sf::Texture &label_texture, const sf::Texture &glow_texture, sf::Vector2f label_position, sf::Vector2f glow_position):
 label(label_texture), glow(glow_texture)
 
@@ -18,7 +18,6 @@ label(label_texture), glow(glow_texture)
     glow.setPosition(glow_position);
     area= glow.getGlobalBounds();
 }
-
 void Button::refresh(const sf::Texture &label_texture, const sf::Texture &glow_texture)
 {
     label.setTexture(label_texture,true);
@@ -32,7 +31,7 @@ void Button::update(sf::Vector2f mouse, float dt, bool keepGlow)
 {
 
     float target;
-    if (keepGlow || area.contains(mouse))
+    if (keepGlow || area.contains(mouse)) //if hover over button, glow png shows
      target=1.f;
     else
         target= 0.f;
@@ -67,7 +66,6 @@ Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State
               heap_button("assets/Heap_button.png"), heap_sprite((heap_button)),
               heap_glow("assets/Heap_glow.png"), heap_glow_sprite((heap_glow)),
 
-                heap_vs_button(heap_button,heap_glow, {185.f,1400.f}, {174.f,1382.f}),
                 sleep_trend_but(sleep_trend_button, sleep_trend_glow,{185.f,1300.f},{174.f,1282.f} ),
                 dot_glow("assets/dot_glow.png")
 
@@ -78,7 +76,7 @@ Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State
     bgSprite.setScale({WIDTH/bgTexture.getSize().x, HEIGHT/bgTexture.getSize().y});
 
     updateView();
-    compiler c;
+    compiler c;                                   //get data from csv file
     c.compile(sleepMap, minHeap, maxHeap);
 
     lines=
@@ -101,12 +99,12 @@ Game::Game(): window(sf::VideoMode({660,990}),"EST",sf::Style::Default,sf::State
 void Game::load_heap_data()
 {
 
-    for (auto& line: lines)
+    for (auto& line: lines) //clears after every call
     {
         line.values.clear();
     }
 
-    for (int start=0; start<=90; start+=10)
+    for (int start=0; start<=90; start+=10)  //iterate through every 10 sleep quality socres and get the average
     {
         int end;
         if (start ==90)
@@ -157,7 +155,7 @@ void Game::load_map_data()
         line.values.clear();
     }
 
-    for (int start=0; start<=90; start+=10)
+    for (int start=0; start<=90; start+=10)  //Getting averages for every 10 sleep quality score
     {
         int end;
         if (start ==90)
@@ -183,7 +181,7 @@ void Game::load_map_data()
 
 }
 //GRAPH MAKING START------------------------------
-float Game::xForBuckect(int i) const
+float Game::xForBuckect(int i) const  //creating a small buffer around the graph
 {
     const float pad= 50.f;
     float usable = plotArea.size.x-2 *pad;
@@ -191,7 +189,7 @@ float Game::xForBuckect(int i) const
     return plotArea.position.x+pad+i*step;
 }
 
-float Game::yForValue(float val, float min_val, float max_val) const
+float Game::yForValue(float val, float min_val, float max_val) const      //y values on the graph
 {
     const float pad= 50.f;
     float usable= plotArea.size.y-2 * pad;
@@ -199,7 +197,7 @@ float Game::yForValue(float val, float min_val, float max_val) const
     float bottom = plotArea.position.y + plotArea.size.y-pad;
     return bottom-t * usable;
 }
-void Game:: drawPillLabel(const string & text, FloatRect half, bool selected)
+void Game:: drawPillLabel(const string & text, FloatRect half, bool selected)  //function to draw the chip toggles below the graph
 {
    Text label(font, text, 30);
     FloatRect b = label.getLocalBounds();
@@ -217,7 +215,7 @@ void Game:: drawPillLabel(const string & text, FloatRect half, bool selected)
 
 }
 
-void Game::drawModeSwitch()
+void Game::drawModeSwitch()   //drawing heap and map area at the top
 {
     bool heapOn= (mode==DataMode::Heap);
 
@@ -347,7 +345,7 @@ void Game:: drawChips()
     }
 
 }
-void Game:: drawStar(Sprite& s, float speed, float offset)
+void Game:: drawStar(Sprite& s, float speed, float offset) //drawing stars on and off
 {
     float t = 0.5f +0.5f * std::sin(life_time * speed + offset);
     s.setColor(sf::Color(255,255,255,uint8_t(195*t)));
@@ -359,7 +357,7 @@ std::string Game::formatValue(float v) const
     snprintf(buffer,sizeof(buffer),"%.1f",v);
     return buffer;
 }
-void Game:: drawTooltip()
+void Game:: drawTooltip() //Drawing the text box that appears after hover
 {
     if (hoverLine==-1)
         return;
@@ -377,12 +375,12 @@ void Game:: drawTooltip()
 
     Vector2f tipSize(tooltipTex.getSize());
 
-    Vector2f tipPos(hoverPos.x - tipSize.x/2.f,hoverPos.y-tipSize.y - 30.f);
+    Vector2f tipPos(hoverPos.x - tipSize.x/2.f,hoverPos.y-tipSize.y - 30.f);    //positions text box near mouse hover
 
     float left= plotArea.position.x;
     float right= plotArea.position.x + plotArea.size.x;
 
-    if (tipPos.x <left)
+    if (tipPos.x <left)     //if the position is outside the graph then position would be equal to the border of graph
         tipPos.x= left;
 
     if (tipPos.x+tipSize.x > right)
@@ -428,7 +426,7 @@ void Game::typeDigit(char32_t c)
         text += static_cast<char>(c);
 }
 
-void Game:: rangeKey(Keyboard::Key key)
+void Game:: rangeKey(Keyboard::Key key)   //keys that are allowed in text box
 {
     if (focusedBox==0)
         return;
@@ -440,14 +438,6 @@ void Game:: rangeKey(Keyboard::Key key)
         if (!text.empty())
             text.pop_back();
     }
-    /*else if (key==Keyboard::Key::Tab)
-    {
-        if (focusedBox==1)
-            focusedBox=2;
-
-        if (focusedBox==2)
-            focusedBox=1;
-    }*/
     else if (key==Keyboard::Key::Enter)
     {
         applyRange();
@@ -456,7 +446,7 @@ void Game:: rangeKey(Keyboard::Key key)
 
 }
 
-void Game::applyRange() {
+void Game::applyRange() {  //range errors that print
     rangeError = "";
     hasRange=false;
     if (fromText.empty()|| toText.empty())
@@ -475,7 +465,7 @@ void Game::applyRange() {
         swap(low,high);
 
 
-    auto start= chrono::steady_clock::now();
+    auto start= chrono::steady_clock::now(); //times range values
     const char* who;
     if (mode == DataMode::Heap)
         who= "heap";
@@ -514,7 +504,7 @@ void Game::applyRange() {
         focusedBox=0;
     }
 
-void Game::drawInputBox(FloatRect box, const string & text, bool focused)
+void Game::drawInputBox(FloatRect box, const string & text, bool focused)   //draw text box
 {
   string shown= text;
     if (focused && fmod(life_time,1.f)<0.5f)
@@ -566,7 +556,7 @@ void Game::drawRangePanel()
     summary.setPosition({130.f,1470.f});
     window.draw(summary);
 
-    for (int i=0; i< (int)lines.size(); i++)
+    for (int i=0; i< (int)lines.size(); i++)  //drawing dots and sleep metrics onto the range box
     {
         float x = 130.f + (i%2)* 480.f;
 
@@ -587,7 +577,7 @@ void Game::drawRangePanel()
     }
 }
 
-string Game::getTime_string()
+string Game::getTime_string() //string for the clock
 {
     time_t now = time(nullptr);
     tm* t = localtime(&now);
@@ -606,7 +596,7 @@ string Game::getTime_string()
     return buffer;
 }
 
-void Game::run()
+void Game::run()  //running game
 {
     Clock clock;
     while (window.isOpen())
@@ -627,31 +617,19 @@ void Game::processEvents()
             window.close();
         else if (event->is<Event::Resized>())
             updateView();
-        else if (const auto* m = event->getIf<Event::MouseButtonPressed>())
+        else if (const auto* m = event->getIf<Event::MouseButtonPressed>()) //if mouse press
         {
             Vector2f p= window.mapPixelToCoords(m->position);
-            if (screen== Screen::menu)
+            if (screen== Screen::menu)  //if in menu
             {
-                if(sleep_trend_but.area.contains(p))
+                if(sleep_trend_but.area.contains(p))  //if press sleep trends button
                 {
                     screen=Screen::Sleep_Trends;
 
-
-                    // for (int i=0; i< (int)chips.size(); i++)
-                    // {
-                    //     if (chips[i].area.contains(p))
-                    //         lines[i].visible = !lines[i].visible;
-                    // }
-
-
                 }
 
-                if(heap_vs_button.area.contains(p))
-                {
-                    screen=Screen::Heap_vs_Map;
-                }
             }
-            else if (screen==Screen::Sleep_Trends)
+            else if (screen==Screen::Sleep_Trends)  //if we are in sleep_trends window
             {
                 if (fromBox.contains(p))
                     focusedBox=1;
@@ -659,26 +637,26 @@ void Game::processEvents()
                     focusedBox=2;
                 else
                     focusedBox=0;
-               for (int i=0; i<(int)chips.size();i++)
+               for (int i=0; i<(int)chips.size();i++)     //if press on chips
                {
                    if (chips[i].area.contains(p))
                    {
                        lines[i].visible= !lines[i].visible;
                    }
                }
-                if (heapHalf.contains(p) && mode!= DataMode::Heap)
+                if (heapHalf.contains(p) && mode!= DataMode::Heap)   //if press heap
                     {
                     mode=DataMode::Heap;
                     load_data();
                 }
-                else if (mapHalf.contains(p) && mode != DataMode::Map) {
+                else if (mapHalf.contains(p) && mode != DataMode::Map) {  //if press map
                     mode= DataMode::Map;
                     load_data();
                 }
             }
         }
 
-        else if (const auto* t=event->getIf<Event::TextEntered>())
+        else if (const auto* t=event->getIf<Event::TextEntered>())  //if text is entered
         {
             if (screen== Screen::Sleep_Trends)
                 typeDigit(t->unicode);
@@ -705,12 +683,7 @@ void Game::update(float dt)
     Vector2f mouse;
     mouse=window.mapPixelToCoords(Mouse::getPosition(window));
     mouse_pos=mouse;
-    //
-    // button_hover+= (target - button_hover)*10 * dt;
 
-    // sleep_trend_sprite.setPosition({185.f,1200.f});
-    // sleep_glow_sprite.setPosition({97.f,1171.f});
-    heap_vs_button.update(mouse, dt);
     sleep_trend_but.update(mouse, dt);
     for (int i = 0; i<(int)chips.size(); i++)
     {
@@ -719,14 +692,14 @@ void Game::update(float dt)
 }
 
 void Game::renderMenu()
-{
+{//rendering stars
     window.draw(bgSprite);
     drawStar(star1_sprite_,3.5f, 0.0f);
     drawStar(star2_sprite_,3.5f, 1.6f);
     drawStar(star3_sprite_,3.5f, 3.1f);
     drawStar(star4_sprite_,3.5f, 4.7f);
 
-
+//rendering the ZZZ effect
     drawStar(z1_sprite,1.5,16.f);
     drawStar(z2_sprite,1.5,8.f);
     drawStar(z3_sprite,1.5,0.f);
@@ -775,7 +748,7 @@ void Game::render() {
     window.display();
 }
 
-void Game::updateView() {
+void Game::updateView() { //resize window
     Vector2u size = window.getSize();
     float winRatio = float(size.x) / size.y;
     float viewRatio = WIDTH / HEIGHT;
