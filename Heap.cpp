@@ -5,16 +5,10 @@
 #include "Heap.h"
 #include <iostream>
 
-Heap::Heap(const std::function<bool(const InfoNode *, const InfoNode *)>& compare) : compare(compare) {}
+Heap::Heap(const std::function<bool(const InfoNode&, const InfoNode&)>& compare) : compare(compare) {}
 
-Heap::~Heap() {
-    for (const auto& node_ptr : heapData) {
-        delete node_ptr;
-    }
-}
-
-void Heap::push(InfoNode* node_ptr) {
-    heapData.push_back(node_ptr);
+void Heap::push(InfoNode node) {
+    heapData.push_back(node);
     siftUp(heapData.size() - 1);
 }
 
@@ -53,25 +47,89 @@ void Heap::siftDown(int index) {
 
 bool Heap::isEmpty() const {return heapData.empty();}
 
-const InfoNode* Heap::top() const {
+const InfoNode& Heap::top() const {
     if (isEmpty()) {
         std::cerr << "Heap is empty" << std::endl;
-        return nullptr;
     }
     return heapData[0];
 }
 
-const InfoNode* Heap::extract() {
+const std::vector<InfoNode>& Heap::getHeapData() const {return heapData;}
+
+InfoNode Heap::extract() {
     if (isEmpty()) {
         std::cerr << "Heap is empty" << std::endl;
-        return nullptr;
     }
 
-    InfoNode* node_ptr = heapData[0];
+    InfoNode node = heapData[0];
     heapData[0] = heapData[heapData.size() - 1];
     heapData.pop_back();
     siftDown(0);
-    return node_ptr;
+    return node;
 }
 
-const std::vector<InfoNode*>& Heap::getHeapData() const {return heapData;}
+double Heap::getAvgValue(int metric, int start, int end) const {
+    int size = 0;
+
+    if (metric == static_cast<int>(InfoNodeType::sleepDuration)) {
+        double duration_total = 0.00;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                duration_total += node.sleepDuration;
+                size++;
+            }
+        }
+        return duration_total / size;
+    }
+    if (metric == static_cast<int>(InfoNodeType::sleepLatency)) {
+        double latency_total = 0.00;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                latency_total += node.sleepLatency;
+                size++;
+            }
+        }
+        return latency_total / size;
+    }
+    if (metric == static_cast<int>(InfoNodeType::stressScore)) {
+        double stress_total = 0.00;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                stress_total += node.stressScore;
+                size++;
+            }
+        }
+        return stress_total / size;
+    }
+    if (metric == static_cast<int>(InfoNodeType::workHours)) {
+        double work_total = 0.00;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                work_total += node.workHours;
+                size++;
+            }
+        }
+        return work_total / size;
+    }
+    if (metric == static_cast<int>(InfoNodeType::caffeineMg)) {
+        double caffeine_total = 0.00;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                caffeine_total += node.caffeineMg;
+                size++;
+            }
+        }
+        return caffeine_total / size;
+    }
+    if (metric == static_cast<int>(InfoNodeType::screenTime)) {
+        double screen_total = 0;
+        for (const auto& node : heapData) {
+            if (node.sleepQuality <= end && node.sleepQuality >= start) {
+                screen_total += node.screenTime;
+                size++;
+            }
+        }
+        return screen_total / size;
+    }
+    return -1;
+}
